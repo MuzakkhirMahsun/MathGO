@@ -24,19 +24,11 @@
             --bg-main: #F0F9FF;
             --bg-card: #FFFFFF;
             --text-main: #1E293B;
-            --primary: #3B82F6;
-            --secondary: #10B981;
-            --accent: #F59E0B;
-            --pastel-pink: #FCE7F3;
         }
         [data-theme="dark"] {
             --bg-main: #0F172A;
             --bg-card: #1E293B;
             --text-main: #F8FAFC;
-            --primary: #60A5FA;
-            --secondary: #34D399;
-            --accent: #FBBF24;
-            --pastel-pink: #4C1D3D;
         }
         .theme-bg { background-color: var(--bg-main); }
         .theme-card { background-color: var(--bg-card); color: var(--text-main); }
@@ -60,7 +52,7 @@
         </div>
         
         <div class="flex items-center space-x-3">
-            <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-gray-100 dark:bg-gray-700 text-sm p-1.5 rounded-full border-none font-bold">
+            <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-gray-100 dark:bg-gray-700 text-sm p-1.5 rounded-full border-none font-bold theme-text">
                 <option value="ms">🇲🇾 BM</option>
                 <option value="en">🇬🇧 EN</option>
             </select>
@@ -120,11 +112,11 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-bold mb-1">E-mel / Username</label>
-                    <input type="email" id="login-email" value="murid@mathgo.my" class="w-full p-3 rounded-xl border-2 border-gray-200 dark:bg-gray-800 text-sm outline-none focus:border-blue-400">
+                    <input type="email" id="login-email" value="murid@mathgo.my" class="w-full p-3 rounded-xl border-2 border-gray-200 dark:bg-gray-800 text-sm outline-none focus:border-blue-400 theme-text">
                 </div>
                 <div>
                     <label class="block text-sm font-bold mb-1">Kata Laluan</label>
-                    <input type="password" id="login-pass" value="123456" class="w-full p-3 rounded-xl border-2 border-gray-200 dark:bg-gray-800 text-sm outline-none focus:border-blue-400">
+                    <input type="password" id="login-pass" value="123456" class="w-full p-3 rounded-xl border-2 border-gray-200 dark:bg-gray-800 text-sm outline-none focus:border-blue-400 theme-text">
                 </div>
                 <button onclick="handleLogin()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold p-3 rounded-xl mt-2 shadow-md">
                     Masuk Sekarang
@@ -135,18 +127,17 @@
                     <div class="flex-grow border-t border-gray-300"></div>
                 </div>
                 <button onclick="handleLogin()" class="w-full bg-white text-gray-700 border-2 border-gray-200 font-bold p-3 rounded-xl flex items-center justify-center space-x-2 hover:bg-gray-50">
-                    <i class="fab fa-google text-red-500"></i> <span>Log Masuk dengan Google</span>
+                    <i class="fab fa-google text-red-500"></i> <span class="text-gray-700">Log Masuk dengan Google</span>
                 </button>
             </div>
-            <p class="text-center text-xs mt-4 text-gray-500">Demo Mode: Terus tekan butang Masuk tanpa ubah kelayakan.</p>
         </div>
 
         <div id="screen-dashboard" class="screen">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 bg-gradient-to-r from-blue-400 to-indigo-400 p-4 rounded-3xl text-white shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6 bg-gradient-to-r from-blue-400 to-indigo-400 p-4 rounded-3xl text-white shadow-lg">
                 <div class="flex items-center space-x-3">
-                    <img id="user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=MathGoBuddy" class="w-12 h-12 bg-white rounded-full p-1 border" alt="Avatar">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=MathGoBuddy" class="w-12 h-12 bg-white rounded-full p-1 border" alt="Avatar">
                     <div>
-                        <div class="font-black text-sm" id="dash-username">Aiman Safwan</div>
+                        <div class="font-black text-sm">Aiman Safwan</div>
                         <div class="bg-amber-400 text-xs px-2 py-0.5 rounded-full font-black inline-block text-gray-900">LV <span id="dash-level">3</span></div>
                     </div>
                 </div>
@@ -169,13 +160,12 @@
                         <h3 class="text-lg font-bold mb-3 text-orange-500"><i class="fas fa-trophy mr-1"></i> Cabaran Hari Ini</h3>
                         <div class="bg-orange-50 dark:bg-orange-950 p-3 rounded-2xl flex justify-between items-center">
                             <div>
-                                <p class="font-bold text-sm">Selesaikan 3 Latihan Operasi Tambah</p>
+                                <p class="font-bold text-sm">Selesaikan Latihan Operasi Tambah</p>
                                 <p class="text-xs text-gray-500">Ganjaran: +50 Syiling, +100 XP</p>
                             </div>
                             <span class="bg-orange-400 text-white text-xs px-3 py-1 rounded-full font-black">1/3</span>
                         </div>
                     </div>
-
                     <div class="theme-card p-5 rounded-3xl shadow border border-gray-100">
                         <h3 class="text-lg font-bold mb-3 text-green-500"><i class="fas fa-chart-line mr-1"></i> Progress Mingguan</h3>
                         <div class="w-full bg-gray-200 dark:bg-gray-700 h-4 rounded-full overflow-hidden">
@@ -183,34 +173,13 @@
                         </div>
                         <p class="text-right text-xs mt-1 font-bold text-gray-500">75% Selesai</p>
                     </div>
-
-                    <div class="theme-card p-5 rounded-3xl shadow border border-gray-100 text-center">
-                        <h3 class="text-lg font-bold mb-2 text-indigo-500"><i class="fas fa-star-twinkle mr-1"></i> Ganjaran Harian / Lucky Spin</h3>
-                        <p class="text-xs text-gray-400 mb-3">Pusing roda tuah anda setiap 24 jam!</p>
-                        <button onclick="triggerLuckySpin()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full font-bold shadow-md text-sm">
-                            <i class="fas fa-spinner fa-spin mr-1"></i> Spin Sekarang
-                        </button>
-                    </div>
                 </div>
-
                 <div class="space-y-6">
                     <div class="theme-card p-5 rounded-3xl shadow border border-gray-100 text-center">
                         <h3 class="text-sm font-black text-left uppercase tracking-wider mb-3 text-purple-500">Lencana Saya</h3>
                         <div class="flex flex-wrap justify-center gap-3">
-                            <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-xl shadow" title="Pakar Nombor"><i class="fas fa-calculator text-amber-500"></i></div>
-                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-xl shadow" title="Raja Speed"><i class="fas fa-tachometer-alt text-blue-500"></i></div>
-                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-xl shadow" title="Super Streak"><i class="fas fa-fire text-green-500"></i></div>
-                        </div>
-                    </div>
-
-                    <div class="theme-card p-5 rounded-3xl shadow border border-gray-100 text-center">
-                        <h3 class="text-sm font-black text-left uppercase tracking-wider mb-2 text-pink-500">Haiwan Peliharaan Digital</h3>
-                        <div class="p-3 bg-pink-50 dark:bg-pink-950 rounded-2xl">
-                            <i class="fas fa-cat text-4xl text-pink-400 animate-bounce"></i>
-                            <p class="font-bold text-xs mt-2">Comel (Tahap 2)</p>
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full mt-1">
-                                <div class="bg-pink-500 h-full w-1/2"></div>
-                            </div>
+                            <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-xl shadow"><i class="fas fa-calculator text-amber-500"></i></div>
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-xl shadow"><i class="fas fa-fire text-blue-500"></i></div>
                         </div>
                     </div>
                 </div>
@@ -218,4 +187,226 @@
         </div>
 
         <div id="screen-age-select" class="screen">
-            <button onclick="showScreen('screen
+            <button onclick="showScreen('screen-dashboard')" class="text-blue-500 font-bold text-sm mb-4"><i class="fas fa-arrow-left"></i> Kembali</button>
+            <h2 class="text-3xl font-black text-center mb-8" data-i18n="select-level-title">Pilih Peringkat Pembelajaran</h2>
+            
+            <div class="mb-8">
+                <h3 class="text-xl font-extrabold text-blue-500 mb-3 border-b pb-1">🏫 Prasekolah / Tadika</h3>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="loadTopics('Tadika 4')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center">4 Tahun</button>
+                    <button onclick="loadTopics('Tadika 5')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center">5 Tahun</button>
+                    <button onclick="loadTopics('Tadika 6')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center">6 Tahun</button>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xl font-extrabold text-green-500 mb-3 border-b pb-1">🎒 Sekolah Rendah (KSSR)</h3>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="loadTopics('Tahun 1')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center">Tahun 1</button>
+                    <button onclick="loadTopics('Tahun 2')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center">Tahun 2</button>
+                    <button onclick="loadTopics('Tahun 3')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center">Tahun 3</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-topics" class="screen">
+            <button onclick="showScreen('screen-age-select')" class="text-blue-500 font-bold text-sm mb-4"><i class="fas fa-arrow-left"></i> Kembali</button>
+            <h2 id="current-age-title" class="text-2xl font-black mb-6 text-center">Topik Matematik</h2>
+            <div id="topics-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <div id="screen-activity" class="screen max-w-xl mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <button onclick="showScreen('screen-topics')" class="text-red-500 font-bold text-sm"><i class="fas fa-times"></i> Keluar</button>
+                <div class="flex-grow mx-4">
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 h-3 rounded-full overflow-hidden">
+                        <div id="activity-progress-bar" class="bg-blue-500 h-full w-0 transition-all"></div>
+                    </div>
+                </div>
+                <span id="activity-score-display" class="font-bold text-sm text-amber-500"><i class="fas fa-star"></i> 0</span>
+            </div>
+
+            <div class="theme-card p-6 rounded-3xl shadow-xl border-4 border-blue-200 text-center relative mb-6">
+                <div id="question-text" class="text-2xl font-black my-6">Berapakah 1 + 1 = ?</div>
+                <div id="activity-zone" class="my-6"></div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-slate-800 p-4 rounded-2xl border-2 border-dashed border-blue-400 flex items-start space-x-3">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=MathGoBuddy" class="w-10 h-10 bg-white rounded-full p-1 border" alt="AI">
+                <div>
+                    <h4 class="font-black text-xs text-blue-600 dark:text-blue-400">MathGo Buddy <span class="bg-blue-200 text-blue-800 text-[9px] px-1.5 py-0.5 rounded-full uppercase ml-1">AI Tutor</span></h4>
+                    <p id="ai-tutor-bubble" class="text-xs text-gray-600 dark:text-gray-300 mt-1 italic">Hai! Cuba kira objek ini perlahan-lahan ya.</p>
+                    <button onclick="askAITutorHint()" class="mt-2 text-[11px] font-bold text-indigo-500 hover:underline"><i class="far fa-lightbulb"></i> Minta Hint</button>
+                </div>
+            </div>
+
+            <button onclick="checkSelectedAnswer()" class="w-full bg-green-500 hover:bg-green-600 text-white font-black p-4 rounded-2xl text-lg shadow-md mt-6">
+                Semak Jawapan <i class="fas fa-check-circle ml-1"></i>
+            </button>
+        </div>
+
+        <div id="screen-parent" class="screen theme-card p-6 rounded-2xl shadow-xl">
+            <h2 class="text-2xl font-black mb-4"><i class="fas fa-user-shield text-green-500"></i> Dashboard Ibu Bapa</h2>
+            <p class="text-sm text-gray-500">Status Prestasi Anak: <span class="text-green-500 font-bold">Baik</span></p>
+        </div>
+        <div id="screen-teacher" class="screen theme-card p-6 rounded-2xl shadow-xl">
+            <h2 class="text-2xl font-black mb-4"><i class="fas fa-graduation-cap text-blue-500"></i> Dashboard Guru</h2>
+            <p class="text-sm text-gray-500">Urus bilik darjah dan tugasan pelajar prasekolah.</p>
+        </div>
+        <div id="screen-admin" class="screen theme-card p-6 rounded-2xl shadow-xl">
+            <h2 class="text-2xl font-black mb-4"><i class="fas fa-sliders-h text-orange-500"></i> Panel Pentadbir</h2>
+            <p class="text-sm text-gray-500">Kemaskini bank soalan KSSR dan konfigurasi Firebase.</p>
+        </div>
+
+    </main>
+
+    <footer class="theme-card text-center p-3 text-xs border-t border-gray-100 mt-10">
+        <p>&copy; 2026 MathGo Malaysia. Sokongan Mod Luar Talian Bersepadu.</p>
+    </footer>
+
+    <script>
+        // CONFIG FIREBASE SEDA ADA
+        const firebaseConfig = {
+            apiKey: "AIzaSyDcBuuzIPTaDYzP07kEQ_E1VErld-HEXt4",
+            authDomain: "mathgo-2648c.firebaseapp.com",
+            databaseURL: "https://mathgo-2648c-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "mathgo-2648c",
+            storageBucket: "mathgo-2648c.firebasestorage.app",
+            messagingSenderId: "554010563302",
+            appId: "1:554010563302:web:42ad3df8b21bceb0262127"
+        };
+
+        const mathGoDatabase = {
+            "Tadika 4": ["Kenal nombor 1-10", "Padankan nombor", "Kira objek"],
+            "Tadika 5": ["Lebih besar", "Lebih kecil", "Masa & Wang"],
+            "Tadika 6": ["Kenal nombor 1-100", "Corak & Bentuk"],
+            "Tahun 1": ["Operasi Tambah", "Operasi Tolak", "Wang Ringgit"],
+            "Tahun 2": ["Sifir Darab", "Bahagi Asas"],
+            "Tahun 3": ["Pecahan", "Perpuluhan"]
+        };
+
+        const localization = {
+            ms: { tagline: "Pembelajaran Matematik Generasi Baru", "start-btn": "Jom Mula!", "choose-role": "Pilih Akaun Anda", "role-child-desc": "Main games!", "role-parent-desc": "Pantau laporan.", "role-teacher-desc": "Urus kelas.", "login-title": "Log Masuk", "continue-study": "Mula Belajar", "select-level-title": "Pilih Peringkat" },
+            en: { tagline: "Next-Gen Mathematics App", "start-btn": "Let's Go!", "choose-role": "Select Your Profile", "role-child-desc": "Play & learn!", "role-parent-desc": "Track progress.", "role-teacher-desc": "Manage class.", "login-title": "Sign In", "continue-study": "Start Learning", "select-level-title": "Select Level" }
+        };
+
+        let currentLanguage = 'ms';
+        let currentActivityQuestions = [];
+        let currentQuestionIndex = 0;
+        let scoreCounter = 0;
+        let selectedAnswerString = "";
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) targetScreen.classList.add('active');
+        }
+
+        function switchRoleDashboard(role) {
+            if (role === 'student') showScreen('screen-dashboard');
+            else if (role === 'parent') showScreen('screen-parent');
+            else if (role === 'teacher') showScreen('screen-teacher');
+            else if (role === 'admin') showScreen('screen-admin');
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (localization[lang][key]) el.innerText = localization[lang][key];
+            });
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            html.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        function handleLogin() {
+            showScreen('screen-dashboard');
+        }
+
+        function loadTopics(ageGroup) {
+            document.getElementById('current-age-title').innerText = `Topik - ${ageGroup}`;
+            const container = document.getElementById('topics-list-container');
+            container.innerHTML = "";
+
+            const topics = mathGoDatabase[ageGroup] || ["Asas Nombor"];
+            topics.forEach(topic => {
+                const card = document.createElement('div');
+                card.className = "theme-card p-5 rounded-3xl border-2 border-dashed border-sky-300 cursor-pointer bounce-hover flex justify-between items-center shadow-sm";
+                card.onclick = () => startTopicActivity(topic);
+                card.innerHTML = `<div><h4 class="font-bold text-blue-600 dark:text-blue-400">${topic}</h4><p class="text-xs text-gray-400">Peringkat: Mudah</p></div><span class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs"><i class="fas fa-play"></i></span>`;
+                container.appendChild(card);
+            });
+            showScreen('screen-topics');
+        }
+
+        function startTopicActivity(topicName) {
+            scoreCounter = 0;
+            currentQuestionIndex = 0;
+            currentActivityQuestions = [
+                { q: "Kira objek ini: 🍎 🍎 🍎 . Berapakah jumlahnya?", a: ["2", "3", "4", "5"], correct: "3", hint: "Kira buah epal bermula dari nombor satu." },
+                { q: "Manakah nombor yang LEBIH BESAR?", a: ["5", "9", "2", "4"], correct: "9", hint: "Sembilan mempunyai nilai kuantiti paling banyak." }
+            ];
+            loadQuestion();
+            showScreen('screen-activity');
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= currentActivityQuestions.length) {
+                alert(`Latihan Selesai! Skor: ${scoreCounter * 10} Mata. Ganjaran +50 XP ditambahkan.`);
+                showScreen('screen-dashboard');
+                return;
+            }
+            selectedAnswerString = "";
+            const currentQ = currentActivityQuestions[currentQuestionIndex];
+            document.getElementById('question-text').innerText = currentQ.q;
+            document.getElementById('activity-progress-bar').style.width = `${(currentQuestionIndex / currentActivityQuestions.length) * 100}%`;
+
+            const zone = document.getElementById('activity-zone');
+            zone.innerHTML = "";
+            const grid = document.createElement('div');
+            grid.className = "grid grid-cols-2 gap-4 mt-4";
+            
+            currentQ.a.forEach(ans => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 bg-gray-100 dark:bg-gray-700 rounded-2xl font-black text-xl border-2 border-gray-200 text-center option-btn theme-text";
+                btn.innerText = ans;
+                btn.onclick = () => {
+                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('border-orange-500', 'bg-orange-100'));
+                    btn.classList.add('border-orange-500', 'bg-orange-100');
+                    selectedAnswerString = ans;
+                };
+                grid.appendChild(btn);
+            });
+            zone.appendChild(grid);
+            document.getElementById('ai-tutor-bubble').innerText = "Fikir baik-baik, adik pasti boleh!";
+        }
+
+        function checkSelectedAnswer() {
+            if (!selectedAnswerString) {
+                alert("Sila pilih satu jawapan dahulu!");
+                return;
+            }
+            const currentQ = currentActivityQuestions[currentQuestionIndex];
+            if (selectedAnswerString === currentQ.correct) {
+                scoreCounter++;
+                document.getElementById('activity-score-display').innerHTML = `<i class="fas fa-star text-yellow-400"></i> ${scoreCounter * 10}`;
+                alert("Hebat! Betul! 🎉");
+            } else {
+                alert(`Kurang tepat. Cuba lagi nanti!`);
+            }
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function askAITutorHint() {
+            const currentQ = currentActivityQuestions[currentQuestionIndex];
+            if (currentQ) {
+                document.getElementById('ai-tutor-bubble').innerText = `💡 Hint: "${currentQ.hint}"`;
+            }
+        }
+    </script>
+</body>
+</html>
