@@ -3,229 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathGo - Aplikasi Pembelajaran Matematik Interaktif</title>
+    <title>MathGo! - Aplikasi Pembelajaran Matematik Interaktif KSSR</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Fredoka untuk Kanak-kanak, Nunito untuk Teks Biasa -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Canvas Confetti untuk Impak Kejayaan -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: #F0F9FF;
+            background-color: #F0F9FF; /* Biru Muda Mesra Kanak-kanak */
+            user-select: none;
         }
-        h1, h2, h3, .kids-font {
+        h1, h2, h3, h4, .font-kids {
             font-family: 'Fredoka', sans-serif;
         }
-        .theme-bg { background-color: #F0F9FF; }
-        .theme-card { background-color: #FFFFFF; color: #1E293B; }
-        .theme-text { color: #1E293B; }
-
-        /* Animations & Screen Toggle */
-        .bounce-hover:hover {
-            transform: translateY(-5px) scale(1.02);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
         .screen { display: none; }
-        .screen.active { display: block; }
+        .screen.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bounce-hover:hover {
+            transform: translateY(-4px) scale(1.02);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F0F9FF; }
+        ::-webkit-scrollbar-thumb { background: #BAE6FD; border-radius: 999px; }
     </style>
 </head>
-<body class="theme-bg theme-text min-h-screen flex flex-col justify-between">
+<body class="text-slate-800 flex flex-col min-h-screen">
 
-    <nav id="main-nav" class="theme-card shadow-md p-4 sticky top-0 z-50 flex justify-between items-center hidden">
+    <!-- GLOBAL NAVIGATION BAR -->
+    <nav id="app-nav" class="bg-white border-b-4 border-sky-100 px-4 py-3 sticky top-0 z-50 flex justify-between items-center hidden shadow-sm">
         <div class="flex items-center space-x-2 cursor-pointer" onclick="showScreen('screen-dashboard')">
-            <div class="bg-amber-400 p-2 rounded-full shadow-inner animate-bounce text-white font-bold text-xl">MG</div>
-            <span class="text-2xl font-black text-blue-500 tracking-wider">Math<span class="text-orange-500">Go</span></span>
+            <div class="bg-amber-400 p-2 rounded-full shadow-md text-white font-black text-xl w-10 h-10 flex items-center justify-center animate-pulse">MG</div>
+            <span class="text-2xl font-black text-sky-500 tracking-wider">Math<span class="text-orange-500">Go</span>!</span>
         </div>
         
         <div class="flex items-center space-x-3">
-            <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-gray-100 text-sm p-1.5 rounded-full border-none font-bold theme-text cursor-pointer">
+            <!-- Language Selector -->
+            <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-slate-100 text-sm font-black p-2 rounded-xl border-2 border-slate-200 cursor-pointer text-slate-700 outline-none">
                 <option value="ms">🇲🇾 BM</option>
                 <option value="en">🇬🇧 EN</option>
             </select>
             
-            <select id="role-select" onchange="switchRoleDashboard(this.value)" class="bg-orange-100 text-xs p-1.5 rounded-md font-bold text-orange-700 cursor-pointer">
-                <option value="student">👦 You</option>
+            <!-- Quick Role Switcher for Demo / Testing Purposes -->
+            <select id="role-select" onchange="switchRoleDashboard(this.value)" class="bg-amber-100 text-xs font-bold p-2 rounded-xl border-none text-amber-800 cursor-pointer outline-none">
+                <option value="student">👦 Murid (You)</option>
                 <option value="parent">👨‍👩‍👦 Ibu Bapa</option>
-                <option value="admin">⚙️ Admin</option>
+                <option value="admin">⚙️ Pentadbir</option>
             </select>
+            
+            <!-- Logout Icon -->
+            <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition text-lg p-2"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </nav>
 
-    <main class="flex-grow container mx-auto max-w-md md:max-w-4xl p-4">
+    <!-- MAIN INTERACTIVE CONTAINER -->
+    <main class="flex-grow container mx-auto max-w-4xl p-4 flex flex-col justify-center">
 
-        <div id="screen-splash" class="screen active text-center py-20">
+        <!-- 1. SPLASH SCREEN -->
+        <div id="screen-splash" class="screen active text-center py-12">
             <div class="relative inline-block">
-                <div class="w-40 h-40 bg-gradient-to-tr from-yellow-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl mx-auto animate-pulse">
-                    <i class="fas fa-calculator text-white text-6xl"></i>
+                <div class="w-48 h-48 bg-gradient-to-tr from-sky-400 via-emerald-400 to-amber-300 rounded-full flex items-center justify-center shadow-2xl mx-auto transform animate-bounce">
+                    <i class="fas fa-robot text-white text-7xl"></i>
                 </div>
-                <span class="absolute top-0 right-0 bg-green-400 text-white text-xs px-2 py-1 rounded-full uppercase font-black tracking-widest animate-bounce">KSSR</span>
+                <span class="absolute -top-2 -right-4 bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-full shadow-md uppercase tracking-wider">KSSR 2026</span>
             </div>
-            <h1 class="text-5xl font-black text-blue-500 mt-6 tracking-wide">Math<span class="text-orange-500">Go</span>!</h1>
-            <p class="text-gray-500 font-medium mt-2" data-i18n="tagline">Pembelajaran Matematik Generasi Baru</p>
-            <div class="mt-10">
-                <button onclick="showScreen('screen-login')" class="bg-green-500 hover:bg-green-600 text-white font-extrabold px-12 py-4 rounded-full text-xl shadow-lg bounce-hover transform transition duration-150 cursor-pointer">
-                    <span id="start-btn-text" data-i18n="start-btn">Jom Mula!</span> <i class="fas fa-arrow-right ml-2"></i>
+            <h1 class="text-6xl font-black text-sky-500 mt-8 tracking-wide">Math<span class="text-orange-500">Go</span>!</h1>
+            <p class="text-slate-500 text-lg font-bold mt-2" data-i18n="tagline">Pembelajaran Matematik Generasi Baru</p>
+            <div class="mt-12">
+                <button onclick="showScreen('screen-onboarding')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black px-14 py-5 rounded-3xl text-2xl shadow-xl bounce-hover transform active:scale-95 transition cursor-pointer border-b-8 border-emerald-700">
+                    <span data-i18n="btn-start">Jom Mula!</span> <i class="fas fa-play ml-2"></i>
                 </button>
             </div>
         </div>
 
-        <div id="screen-login" class="screen max-w-sm mx-auto theme-card p-8 rounded-3xl shadow-xl border border-gray-100 mt-10">
-            <h2 class="text-3xl font-black text-center mb-2" data-i18n="login-title">Log Masuk</h2>
-            <p class="text-xs text-center text-gray-400 mb-6">Sila log masuk untuk memasuki MathGo</p>
+        <!-- 2. ONBOARDING SCREEN -->
+        <div id="screen-onboarding" class="screen text-center max-w-md mx-auto bg-white p-8 rounded-3xl shadow-xl border-4 border-sky-100">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=GOBOT" class="w-32 h-32 mx-auto mb-4 bg-sky-100 rounded-full p-2" alt="GOBOT">
+            <h2 class="text-3xl font-black text-sky-500 mb-2">Hai, Saya GOBOT!</h2>
+            <p class="text-slate-600 font-medium mb-8" data-i18n="gobot-intro">Saya akan menjadi rakan dan guru robot matematik peribadi anda di MathGo!</p>
+            <div class="space-y-4">
+                <button onclick="showScreen('screen-login')" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-black p-4 rounded-2xl shadow border-b-4 border-sky-700 bounce-hover cursor-pointer" data-i18n="btn-login-page">Log Masuk Akaun</button>
+                <button onclick="showScreen('screen-register')" class="w-full bg-white text-sky-500 font-black p-4 rounded-2xl border-2 border-sky-300 hover:bg-sky-50 transition cursor-pointer" data-i18n="btn-register-page">Daftar Akaun Baharu</button>
+            </div>
+        </div>
+
+        <!-- 3. LOGIN SCREEN -->
+        <div id="screen-login" class="screen max-w-sm mx-auto bg-white p-8 rounded-3xl shadow-xl border-4 border-sky-100">
+            <h2 class="text-3xl font-black text-center text-slate-800 mb-6" data-i18n="login-title">Log Masuk</h2>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-bold mb-1" data-i18n="login-username">E-mel / Username</label>
-                    <input type="email" id="login-email" value="you@mathgo.my" class="w-full p-3 rounded-xl border-2 border-gray-200 text-sm outline-none focus:border-blue-400 theme-text">
+                    <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-email">E-mel atau ID Pengguna</label>
+                    <input type="email" id="login-email" value="murid@mathgo.my" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 outline-none focus:border-sky-400 font-bold text-slate-700">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold mb-1" data-i18n="login-password">Kata Laluan</label>
-                    <input type="password" id="login-pass" value="123456" class="w-full p-3 rounded-xl border-2 border-gray-200 text-sm outline-none focus:border-blue-400 theme-text">
+                    <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-password">Kata Laluan</label>
+                    <input type="password" id="login-pass" value="123456" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 outline-none focus:border-sky-400 font-bold text-slate-700">
                 </div>
-                <button onclick="handleLogin()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold p-3 rounded-xl mt-2 shadow-md cursor-pointer" data-i18n="login-btn">
-                    Masuk Sekarang
-                </button>
-                <div class="relative flex py-2 items-center">
-                    <div class="flex-grow border-t border-gray-300"></div>
-                    <span class="flex-shrink mx-4 text-gray-400 text-xs uppercase" data-i18n="or-text">Atau</span>
-                    <div class="flex-grow border-t border-gray-300"></div>
+                <div class="flex items-center justify-between text-xs font-bold text-sky-500 pt-1">
+                    <label class="flex items-center space-x-1"><input type="checkbox" checked class="rounded"> <span data-i18n="remember-me">Ingat Saya</span></label>
+                    <a href="#" class="hover:underline" data-i18n="forgot-pass">Lupa kata laluan?</a>
                 </div>
-                <button onclick="handleLogin()" class="w-full bg-white text-gray-700 border-2 border-gray-200 font-bold p-3 rounded-xl flex items-center justify-center space-x-2 hover:bg-gray-50 cursor-pointer">
-                    <i class="fab fa-google text-red-500"></i> <span class="text-gray-700" data-i18n="google-login">Log Masuk dengan Google</span>
-                </button>
+                <button onclick="processLogin()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black p-4 rounded-2xl shadow-md border-b-4 border-emerald-700 mt-4 cursor-pointer" data-i18n="btn-login">Masuk Sekarang</button>
+                <button onclick="showScreen('screen-onboarding')" class="w-full text-center text-slate-400 text-sm font-bold hover:underline cursor-pointer mt-2" data-i18n="btn-back">Kembali</button>
             </div>
         </div>
 
+        <!-- 4. REGISTER SCREEN -->
+        <div id="screen-register" class="screen max-w-sm mx-auto bg-white p-8 rounded-3xl shadow-xl border-4 border-sky-100">
+            <h2 class="text-3xl font-black text-center text-slate-800 mb-6" data-i18n="register-title">Daftar Akaun</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="reg-name">Nama Penuh Anak</label>
+                    <input type="text" placeholder="Aiman" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-email">E-mel Ibu Bapa</label>
+                    <input type="email" placeholder="ibu@gmail.com" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-password">Kata Laluan</label>
+                    <input type="password" placeholder="******" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700">
+                </div>
+                <button onclick="processLogin()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black p-4 rounded-2xl shadow-md border-b-4 border-orange-700 mt-4 cursor-pointer" data-i18n="btn-register">Daftar & Mula</button>
+                <button onclick="showScreen('screen-onboarding')" class="w-full text-center text-slate-400 text-sm font-bold hover:underline cursor-pointer mt-2" data-i18n="btn-back">Kembali</button>
+            </div>
+        </div>
+
+        <!-- 5. STUDENT DASHBOARD -->
         <div id="screen-dashboard" class="screen">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6 bg-gradient-to-r from-blue-400 to-indigo-400 p-4 rounded-3xl text-white shadow-lg">
-                <div class="flex items-center space-x-3">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=MathGoBuddy" class="w-12 h-12 bg-white rounded-full p-1 border" alt="Avatar">
+            <!-- Top Status Profile Card -->
+            <div class="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 rounded-3xl p-6 text-white shadow-xl mb-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                <div class="flex items-center space-x-4">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Aiman" class="w-16 h-16 bg-white rounded-full p-1 border-4 border-sky-200 shadow-md" alt="Avatar">
                     <div>
-                        <div class="font-black text-sm">Aiman Safwan</div>
-                        <div class="bg-amber-400 text-xs px-2 py-0.5 rounded-full font-black inline-block text-gray-900">LV <span id="dash-level">3</span></div>
+                        <h2 class="text-2xl font-black tracking-wide">Aiman Safwan</h2>
+                        <span class="bg-amber-400 text-slate-900 text-xs px-3 py-1 rounded-full font-black uppercase tracking-wider shadow-inner">Tahap / LV 3</span>
                     </div>
                 </div>
-                <div class="flex items-center justify-around bg-white/20 rounded-2xl p-2">
-                    <div class="text-center"><i class="fas fa-bolt text-yellow-300 text-lg"></i> <p class="text-xs font-bold"><span id="dash-xp">1,250</span> XP</p></div>
-                    <div class="text-center"><i class="fas fa-coins text-amber-300 text-lg"></i> <p class="text-xs font-bold"><span id="dash-coins">340</span></p></div>
+                <div class="flex justify-around bg-black/10 rounded-2xl p-3 border border-white/10 text-center">
+                    <div>
+                        <i class="fas fa-bolt text-amber-300 text-2xl animate-bounce"></i>
+                        <p class="text-xs text-sky-100 font-bold mt-1 uppercase">XP</p>
+                        <p class="font-black text-lg">2,450</p>
+                    </div>
+                    <div class="border-l border-white/20"></div>
+                    <div>
+                        <i class="fas fa-coins text-yellow-300 text-2xl"></i>
+                        <p class="text-xs text-sky-100 font-bold mt-1 uppercase">Syiling</p>
+                        <p class="font-black text-lg">580</p>
+                    </div>
+                    <div class="border-l border-white/20"></div>
+                    <div>
+                        <i class="fas fa-fire text-orange-400 text-2xl animate-pulse"></i>
+                        <p class="text-xs text-sky-100 font-bold mt-1 uppercase">Streak</p>
+                        <p class="font-black text-lg">7 <span class="text-xs font-normal" data-i18n="days">Hari</span></p>
+                    </div>
                 </div>
-                <div class="flex items-center justify-center space-x-2 bg-white/20 rounded-2xl p-2">
-                    <i class="fas fa-fire text-orange-500 text-xl animate-pulse"></i>
-                    <span class="text-sm font-black"><span id="dash-streak">5</span> <span data-i18n="streak-days">Hari Streak!</span></span>
+                <div class="text-right">
+                    <button onclick="showScreen('screen-years')" class="w-full bg-emerald-400 hover:bg-emerald-500 text-white font-black px-6 py-4 rounded-2xl shadow-lg border-b-4 border-emerald-600 bounce-hover text-lg cursor-pointer">
+                        <i class="fas fa-graduation-cap mr-2"></i> <span data-i18n="btn-learn-now">Mula Belajar</span>
+                    </button>
                 </div>
-                <button onclick="showScreen('screen-age-select')" class="bg-green-400 hover:bg-green-500 text-white font-black text-sm p-3 rounded-2xl shadow-md transform active:scale-95 transition cursor-pointer">
-                    <i class="fas fa-play-circle mr-1"></i> <span data-i18n="continue-study">Mula Belajar</span>
+            </div>
+
+            <!-- Content Area Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Left Content Area -->
+                <div class="md:col-span-2 space-y-6">
+                    <!-- Daily Challenge Section -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-amber-100 relative overflow-hidden">
+                        <div class="absolute -top-6 -right-6 w-24 h-24 bg-amber-50 rounded-full flex items-center justify-center">
+                            <i class="fas fa-trophy text-amber-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-amber-500 mb-2" data-i18n="daily-challenge">Cabaran Hari Ini 🎯</h3>
+                        <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-100">
+                            <p class="font-bold text-slate-700 text-sm" data-i18n="challenge-desc">Selesaikan 2 latihan kuiz operasi tambah tanpa melakukan kesilapan!</p>
+                            <p class="text-xs text-amber-600 font-bold mt-2"><i class="fas fa-gift mr-1"></i> Ganjaran: +50 Syiling, +100 XP, 1 Lencana Misteri</p>
+                        </div>
+                    </div>
+
+                    <!-- Adaptive Recommendations -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-indigo-50">
+                        <h3 class="text-xl font-black text-indigo-500 mb-3" data-i18n="recommendation-title">Cadangan Sesi Belajar Seterusnya 🤖</h3>
+                        <div onclick="loadTopics('Tahun 1')" class="bg-slate-50 hover:bg-indigo-50/50 p-4 rounded-2xl border-2 border-dashed border-indigo-200 flex justify-between items-center cursor-pointer transition">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-indigo-500 text-white p-3 rounded-xl"><i class="fas fa-calculator"></i></div>
+                                <div>
+                                    <p class="font-black text-sm text-slate-800">Topik Terakhir: Tambah Mudah (Tahun 1)</p>
+                                    <p class="text-xs text-slate-400 font-medium">Berdasarkan data AI, kuasai ini sebelum beralih ke Operasi Tolak.</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-indigo-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side Widgets -->
+                <div class="space-y-6">
+                    <!-- Pet Badges / Rewards Vault -->
+                    <div class="bg-white p-5 rounded-3xl shadow-md border-2 border-emerald-50 text-center">
+                        <h3 class="text-sm font-black text-emerald-600 uppercase tracking-wider mb-4 text-left"><i class="fas fa-shield-cat mr-1"></i> Lencana & Kedudukan</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-slate-50 p-2 rounded-xl text-center shadow-inner"><i class="fas fa-award text-amber-400 text-2xl"></i><p class="text-[9px] font-bold text-slate-500 mt-1">Jaguh Tambah</p></div>
+                            <div class="bg-slate-50 p-2 rounded-xl text-center shadow-inner"><i class="fas fa-fire text-orange-500 text-2xl"></i><p class="text-[9px] font-bold text-slate-500 mt-1">7 Hari Aktif</p></div>
+                            <div class="bg-slate-50 p-2 rounded-xl text-center shadow-inner filter grayscale opacity-50"><i class="fas fa-brain text-purple-400 text-2xl"></i><p class="text-[9px] font-bold text-slate-500 mt-1">Pakar KBAT</p></div>
+                        </div>
+                    </div>
+
+                    <!-- Offline Mode Status Widget -->
+                    <div class="bg-sky-50 border-2 border-dashed border-sky-200 p-4 rounded-2xl flex items-center space-x-3">
+                        <i class="fas fa-wifi-slash text-sky-500 text-xl animate-pulse"></i>
+                        <div>
+                            <h4 class="font-black text-xs text-sky-700" data-i18n="offline-title">Mod Luar Talian Bersepadu</h4>
+                            <p class="text-[10px] text-sky-600 font-medium mt-0.5">Semua data pembelajaran disalin secara automatik ke peranti tempatan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. LEVEL / YEAR SELECTION -->
+        <div id="screen-years" class="screen">
+            <button onclick="showScreen('screen-dashboard')" class="text-sky-500 font-black text-sm mb-4 cursor-pointer hover:underline"><i class="fas fa-arrow-left mr-1"></i> <span data-i18n="btn-back">Kembali</span></button>
+            <h2 class="text-3xl font-black text-center text-slate-800 mb-8" data-i18n="select-level">Pilih Peringkat Sekolah Anda</h2>
+            
+            <!-- Tadika Section -->
+            <div class="mb-8 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-xl font-black text-orange-500 mb-4 flex items-center"><i class="fas fa-school-flag mr-2"></i> Peringkat Prasekolah / Tadika</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <button onclick="loadTopics('Tadika 4')" class="p-4 bg-orange-50 hover:bg-orange-100 border-2 border-orange-200 rounded-2xl font-black text-orange-700 bounce-hover cursor-pointer text-center">4 Tahun</button>
+                    <button onclick="loadTopics('Tadika 5')" class="p-4 bg-orange-50 hover:bg-orange-100 border-2 border-orange-200 rounded-2xl font-black text-orange-700 bounce-hover cursor-pointer text-center">5 Tahun</button>
+                    <button onclick="loadTopics('Tadika 6')" class="p-4 bg-orange-50 hover:bg-orange-100 border-2 border-orange-200 rounded-2xl font-black text-orange-700 bounce-hover cursor-pointer text-center">6 Tahun</button>
+                </div>
+            </div>
+
+            <!-- Primary School Section -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-xl font-black text-sky-500 mb-4 flex items-center"><i class="fas fa-graduation-cap mr-2"></i> Sekolah Rendah (KSSR)</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <button onclick="loadTopics('Tahun 1')" class="p-4 bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 rounded-2xl font-black text-sky-700 bounce-hover cursor-pointer text-center">Tahun 1</button>
+                    <button onclick="loadTopics('Tahun 2')" class="p-4 bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 rounded-2xl font-black text-sky-700 bounce-hover cursor-pointer text-center">Tahun 2</button>
+                    <button onclick="loadTopics('Tahun 3')" class="p-4 bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 rounded-2xl font-black text-sky-700 bounce-hover cursor-pointer text-center">Tahun 3</button>
+                    <button onclick="loadTopics('Tahun 4')" class="p-4 bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-200 rounded-2xl font-black text-emerald-700 bounce-hover cursor-pointer text-center">Tahun 4</button>
+                    <button onclick="loadTopics('Tahun 5')" class="p-4 bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-200 rounded-2xl font-black text-emerald-700 bounce-hover cursor-pointer text-center">Tahun 5</button>
+                    <button onclick="loadTopics('Tahun 6')" class="p-4 bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-200 rounded-2xl font-black text-emerald-700 bounce-hover cursor-pointer text-center">Tahun 6</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. TOPIC SELECTION SCREEN -->
+        <div id="screen-topics" class="screen">
+            <button onclick="showScreen('screen-years')" class="text-sky-500 font-black text-sm mb-4 cursor-pointer hover:underline"><i class="fas fa-arrow-left mr-1"></i> <span data-i18n="btn-back">Kembali</span></button>
+            <h2 id="current-selected-year-title" class="text-3xl font-black mb-6 text-slate-800 text-center">Topik Matematik</h2>
+            <div id="topics-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Diisi secara dinamik menerusi JavaScript -->
+            </div>
+        </div>
+
+        <!-- 8. ACTIVITY GAME ZONE (EXERCISE & QUIZ) -->
+        <div id="screen-activity" class="screen max-w-xl mx-auto">
+            <!-- Header Top Bar Info -->
+            <div class="flex justify-between items-center mb-4">
+                <button onclick="showScreen('screen-topics')" class="text-red-500 font-black text-sm cursor-pointer hover:underline"><i class="fas fa-times-circle mr-1"></i> <span data-i18n="btn-exit">Keluar</span></button>
+                <div class="flex-grow mx-4">
+                    <div class="w-full bg-slate-200 h-4 rounded-full overflow-hidden shadow-inner">
+                        <div id="activity-progress" class="bg-gradient-to-r from-sky-400 to-emerald-400 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+                <div id="quiz-score-badge" class="bg-amber-100 text-amber-700 font-black text-sm px-3 py-1.5 rounded-full border border-amber-300"><i class="fas fa-star text-amber-400"></i> <span id="score-val">0</span></div>
+            </div>
+
+            <!-- Question Card Base -->
+            <div class="bg-white p-8 rounded-3xl shadow-xl border-4 border-sky-200 text-center relative mb-6">
+                <div id="question-text" class="text-2xl font-black text-slate-800 my-4">Sila pilih topik latihan...</div>
+                <div id="answers-container" class="my-6">
+                    <!-- Pilihan jawapan dimuatkan secara dinamik -->
+                </div>
+            </div>
+
+            <!-- GOBOT THE AI TUTOR PANEL -->
+            <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-sky-400 flex items-start space-x-3 shadow-sm relative">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=GOBOT" class="w-12 h-12 bg-sky-100 rounded-full p-1 border-2 border-sky-300" alt="GOBOT">
+                <div class="flex-grow">
+                    <div class="flex items-center space-x-2">
+                        <h4 class="font-black text-xs text-sky-600">GOBOT AI Tutor</h4>
+                        <span class="bg-orange-100 text-orange-700 text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-widest">KSSR Expert</span>
+                    </div>
+                    <p id="gobot-bubble" class="text-xs text-slate-600 mt-1 font-semibold italic">"Hai! Klik butang di sebelah kanan untuk mendapatkan bantuan atau penerangan pintar saya!"</p>
+                </div>
+                <button onclick="triggerGobotAILogic()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-black text-xs px-3 py-2.5 rounded-xl shadow transition shrink-0 self-center border-b-2 border-amber-600 cursor-pointer">
+                    <i class="far fa-lightbulb"></i> Hint GOBOT
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="space-y-6 md:col-span-2">
-                    <div class="theme-card p-5 rounded-3xl shadow border border-gray-100">
-                        <h3 class="text-lg font-bold mb-3 text-orange-500"><i class="fas fa-trophy mr-1"></i> <span data-i18n="challenge-title">Cabaran Hari Ini</span></h3>
-                        <div class="bg-orange-50 p-3 rounded-2xl flex justify-between items-center">
-                            <div>
-                                <p class="font-bold text-sm" data-i18n="challenge-desc">Selesaikan Latihan Operasi Tambah</p>
-                                <p class="text-xs text-gray-500" data-i18n="challenge-reward">Ganjaran: +50 Syiling, +100 XP</p>
-                            </div>
-                            <span class="bg-orange-400 text-white text-xs px-3 py-1 rounded-full font-black">1/3</span>
-                        </div>
-                    </div>
-                    <div class="theme-card p-5 rounded-3xl shadow border border-gray-100">
-                        <h3 class="text-lg font-bold mb-3 text-green-500"><i class="fas fa-chart-line mr-1"></i> <span data-i18n="progress-title">Progress Mingguan</span></h3>
-                        <div class="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
-                            <div class="bg-green-500 h-full w-3/4"></div>
-                        </div>
-                        <p class="text-right text-xs mt-1 font-bold text-gray-500" data-i18n="progress-percent">75% Selesai</p>
-                    </div>
-                </div>
-                <div class="space-y-6">
-                    <div class="theme-card p-5 rounded-3xl shadow border border-gray-100 text-center">
-                        <h3 class="text-sm font-black text-left uppercase tracking-wider mb-3 text-purple-500" data-i18n="badge-title">Lencana Saya</h3>
-                        <div class="flex flex-wrap justify-center gap-3">
-                            <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-xl shadow"><i class="fas fa-calculator text-amber-500"></i></div>
-                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-xl shadow"><i class="fas fa-fire text-blue-500"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="screen-age-select" class="screen">
-            <button onclick="showScreen('screen-dashboard')" class="text-blue-500 font-bold text-sm mb-4 cursor-pointer"><i class="fas fa-arrow-left"></i> <span data-i18n="back-btn">Kembali</span></button>
-            <h2 class="text-3xl font-black text-center mb-8" data-i18n="select-level-title">Pilih Peringkat Pembelajaran</h2>
-            
-            <div class="mb-8">
-                <h3 class="text-xl font-extrabold text-blue-500 mb-3 border-b pb-1" data-i18n="level-preschool">🏫 Prasekolah / Tadika</h3>
-                <div class="grid grid-cols-3 gap-3">
-                    <button onclick="loadTopics('Tadika 4')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="age-4">4 Tahun</button>
-                    <button onclick="loadTopics('Tadika 5')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="age-5">5 Tahun</button>
-                    <button onclick="loadTopics('Tadika 6')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="age-6">6 Tahun</button>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-xl font-extrabold text-green-500 mb-3 border-b pb-1" data-i18n="level-primary">🎒 Sekolah Rendah (KSSR)</h3>
-                <div class="grid grid-cols-3 gap-3">
-                    <button onclick="loadTopics('Tahun 1')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="year-1">Tahun 1</button>
-                    <button onclick="loadTopics('Tahun 2')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="year-2">Tahun 2</button>
-                    <button onclick="loadTopics('Tahun 3')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="year-3">Tahun 3</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="screen-topics" class="screen">
-            <button onclick="showScreen('screen-age-select')" class="text-blue-500 font-bold text-sm mb-4 cursor-pointer"><i class="fas fa-arrow-left"></i> <span data-i18n="back-btn">Kembali</span></button>
-            <h2 id="current-age-title" class="text-2xl font-black mb-6 text-center">Topik Matematik</h2>
-            <div id="topics-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </div>
-
-        <div id="screen-activity" class="screen max-w-xl mx-auto">
-            <div class="flex justify-between items-center mb-4">
-                <button onclick="showScreen('screen-topics')" class="text-red-500 font-bold text-sm cursor-pointer"><i class="fas fa-times"></i> <span data-i18n="exit-btn">Keluar</span></button>
-                <div class="flex-grow mx-4">
-                    <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
-                        <div id="activity-progress-bar" class="bg-blue-500 h-full w-0 transition-all"></div>
-                    </div>
-                </div>
-                <span id="activity-score-display" class="font-bold text-sm text-amber-500"><i class="fas fa-star"></i> 0</span>
-            </div>
-
-            <div class="theme-card p-6 rounded-3xl shadow-xl border-4 border-blue-200 text-center relative mb-6">
-                <div id="question-text" class="text-2xl font-black my-6">Berapakah 1 + 1 = ?</div>
-                <div id="activity-zone" class="my-6"></div>
-            </div>
-
-            <div class="bg-blue-50 p-4 rounded-2xl border-2 border-dashed border-blue-400 flex items-start space-x-3">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=MathGoBuddy" class="w-10 h-10 bg-white rounded-full p-1 border" alt="AI">
-                <div>
-                    <h4 class="font-black text-xs text-blue-600">MathGo Buddy <span class="bg-blue-200 text-blue-800 text-[9px] px-1.5 py-0.5 rounded-full uppercase ml-1">AI Tutor</span></h4>
-                    <p id="ai-tutor-bubble" class="text-xs text-gray-600 mt-1 italic" data-i18n="ai-bubble-default">Hai! Cuba kira objek ini perlahan-lahan ya.</p>
-                    <button onclick="askAITutorHint()" class="mt-2 text-[11px] font-bold text-indigo-500 hover:underline cursor-pointer"><i class="far fa-lightbulb"></i> <span data-i18n="ask-hint">Minta Hint</span></button>
-                </div>
-            </div>
-
-            <button onclick="checkSelectedAnswer()" class="w-full bg-green-500 hover:bg-green-600 text-white font-black p-4 rounded-2xl text-lg shadow-md mt-6 cursor-pointer" data-i18n="check-answer">
-                Semak Jawapan <i class="fas fa-check-circle ml-1"></i>
+            <button onclick="submitSelectedAnswer()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black p-4 rounded-2xl text-xl shadow-lg border-b-4 border-emerald-700 mt-6 transform active:scale-95 transition cursor-pointer">
+                Semak Jawapan <i class="fas fa-chevron-right ml-1"></i>
             </button>
         </div>
 
-        <div id="screen-parent" class="screen theme-card p-6 rounded-2xl shadow-xl">
-            <h2 class="text-2xl font-black mb-4"><i class="fas fa-user-shield text-green-500"></i> <span data-i18n="parent-dash-title">Dashboard Ibu Bapa</span></h2>
-            <p class="text-sm text-gray-500"><span data-i18n="parent-dash-status">Status Prestasi Anak:</span> <span class="text-green-500 font-bold" data-i18n="parent-dash-good">Baik</span></p>
+        <!-- 9. PARENT DASHBOARD MONITORING -->
+        <div id="screen-parent" class="screen bg-white p-6 rounded-3xl shadow-xl border-4 border-emerald-100">
+            <h2 class="text-3xl font-black text-slate-800 mb-2 flex items-center"><i class="fas fa-user-shield text-emerald-500 mr-2"></i> Dashboard Ibu Bapa</h2>
+            <p class="text-sm text-slate-400 font-medium mb-6">Pantau aktiviti pembelajaran harian dan pencapaian akademik anak anda.</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+                <div class="bg-slate-50 p-4 rounded-xl text-center border"><p class="text-xs font-bold text-slate-400 uppercase">Masa Belajar</p><p class="text-xl font-black text-slate-800 mt-1">45 Minit / Hari</p></div>
+                <div class="bg-slate-50 p-4 rounded-xl text-center border"><p class="text-xs font-bold text-slate-400 uppercase">Purata Skor</p><p class="text-xl font-black text-emerald-600 mt-1">88%</p></div>
+                <div class="bg-slate-50 p-4 rounded-xl text-center border"><p class="text-xs font-bold text-slate-400 uppercase">Topik Kuat 💪</p><p class="text-sm font-black text-slate-800 mt-2">Operasi Tambah</p></div>
+                <div class="bg-slate-50 p-4 rounded-xl text-center border"><p class="text-xs font-bold text-slate-400 uppercase">Ulang Kaji Diperlukan ⚠️</p><p class="text-sm font-black text-orange-600 mt-2">Masa & Waktu</p></div>
+            </div>
+
+            <div class="border-t pt-4">
+                <h3 class="font-black text-slate-700 mb-2">Graf Perkembangan Mingguan</h3>
+                <div class="w-full bg-slate-100 h-32 rounded-xl flex items-end justify-between p-2 space-x-2">
+                    <div class="bg-emerald-400 w-full rounded" style="height: 40%"></div>
+                    <div class="bg-emerald-400 w-full rounded" style="height: 65%"></div>
+                    <div class="bg-emerald-400 w-full rounded" style="height: 50%"></div>
+                    <div class="bg-emerald-500 w-full rounded" style="height: 85%"></div>
+                    <div class="bg-emerald-400 w-full rounded" style="height: 70%"></div>
+                    <div class="bg-emerald-600 w-full rounded" style="height: 95%"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-slate-400 font-bold mt-1 px-1">
+                    <span>Isnin</span><span>Selasa</span><span>Rabu</span><span>Khamis</span><span>Jumaat</span><span>Sabtu/Ahad</span>
+                </div>
+            </div>
         </div>
-        <div id="screen-admin" class="screen theme-card p-6 rounded-2xl shadow-xl">
-            <h2 class="text-2xl font-black mb-4"><i class="fas fa-sliders-h text-orange-500"></i> Panel Pentadbir</h2>
-            <p class="text-sm text-gray-500">Kemaskini bank soalan KSSR dan konfigurasi Firebase.</p>
+
+        <!-- 10. SYSTEM CENTRAL ADMIN PANEL -->
+        <div id="screen-admin" class="screen bg-white p-6 rounded-3xl shadow-xl border-4 border-slate-700">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-black text-slate-800 flex items-center"><i class="fas fa-sliders-h text-slate-600 mr-2"></i> Panel Pentadbir MathGo</h2>
+                <span class="bg-slate-100 text-slate-700 text-xs px-2.5 py-1 rounded font-black">Super Admin</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                <div class="bg-sky-50 p-3 rounded-xl"><p class="text-xs text-sky-600 font-bold">Total Ahli</p><p class="text-lg font-black text-slate-800">12,450</p></div>
+                <div class="bg-emerald-50 p-3 rounded-xl"><p class="text-xs text-emerald-600 font-bold">Bank Soalan</p><p class="text-lg font-black text-slate-800">1,200 Soalan</p></div>
+                <div class="bg-amber-50 p-3 rounded-xl"><p class="text-xs text-amber-600 font-bold">Percubaan Kuiz</p><p class="text-lg font-black text-slate-800">45,120 Kali</p></div>
+                <div class="bg-purple-50 p-3 rounded-xl"><p class="text-xs text-purple-600 font-bold">Mod Premium</p><p class="text-lg font-black text-slate-800">34% Pengguna</p></div>
+            </div>
+
+            <h3 class="font-black text-sm text-slate-700 uppercase tracking-wider mb-2">Simulasi Pengurusan Soalan KSSR</h3>
+            <div class="bg-slate-50 p-4 rounded-xl space-y-3 text-xs border">
+                <div class="flex justify-between items-center p-2 bg-white rounded shadow-sm">
+                    <span class="font-bold text-slate-700">S1: Kira epal 🍎🍎 + 🍎</span>
+                    <div class="space-x-1">
+                        <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Edit</button>
+                        <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Padam</button>
+                    </div>
+                </div>
+                <button onclick="alert('Ciri import fail Excel/CSV berjaya disimulasikan!')" class="w-full bg-slate-800 hover:bg-slate-900 text-white p-2.5 rounded font-bold text-center block transition">
+                    <i class="fas fa-file-import mr-1"></i> Import Soalan Melalui Fail Excel / CSV
+                </button>
+            </div>
         </div>
 
     </main>
 
-    <footer class="theme-card text-center p-3 text-xs border-t border-gray-100 mt-10">
-        <p data-i18n="footer-text">&copy; 2026 MathGo Malaysia. Sokongan Mod Luar Talian Bersepadu.</p>
+    <!-- FOOTER SYSTEM STATUS -->
+    <footer class="bg-white border-t-4 border-sky-100 text-center p-3 text-xs font-bold text-slate-400 mt-8 shadow-inner">
+        <div class="container mx-auto max-w-4xl flex flex-col sm:flex-row justify-between items-center">
+            <p id="footer-text">&copy; 2026 MathGo Malaysia. Sistem Silabus Matematik KSSR.</p>
+            <div class="flex space-x-3 mt-1 sm:mt-0 text-sky-400 text-sm">
+                <i class="fab fa-android hover:text-sky-500 transition cursor-pointer"></i>
+                <i class="fab fa-apple hover:text-sky-500 transition cursor-pointer"></i>
+                <i class="fas fa-tablet-alt hover:text-sky-500 transition cursor-pointer"></i>
+            </div>
+        </div>
     </footer>
 
+    <!-- INTERACTIVE ENGINE CORE JAVASCRIPT -->
     <script>
-        // CONFIG FIREBASE
+        // FIREBASE CONFIGURATION REPLICA AS PROVIDED
         const firebaseConfig = {
             apiKey: "AIzaSyDcBuuzIPTaDYzP07kEQ_E1VErld-HEXt4",
             authDomain: "mathgo-2648c.firebaseapp.com",
@@ -236,208 +398,248 @@
             appId: "1:554010563302:web:42ad3df8b21bceb0262127"
         };
 
+        // INTERNAL APPLICATION SILABUS DATABASE (KSSR MATCHED)
         const mathGoDatabase = {
             "Tadika 4": ["Kenal nombor 1-10", "Padankan nombor", "Kira objek"],
-            "Tadika 5": ["Lebih besar", "Lebih kecil", "Masa & Wang"],
-            "Tadika 6": ["Kenal nombor 1-100", "Corak & Bentuk"],
-            "Tahun 1": ["Operasi Tambah", "Operasi Tolak", "Wang Ringgit"],
-            "Tahun 2": ["Sifir Darab", "Bahagi Asas"],
-            "Tahun 3": ["Pecahan", "Perpuluhan"]
+            "Tadika 5": ["Lebih besar", "Lebih kecil", "Masa & Wang Asas"],
+            "Tadika 6": ["Kenal nombor 1-100", "Bentuk & Warna", "Tambah mudah"],
+            "Tahun 1": ["Operasi Tambah", "Operasi Tolak", "Masa dan Waktu", "Wang Ringgit"],
+            "Tahun 2": ["Sifir Darab Asas", "Bahagi Asas", "Pecahan Mudah"],
+            "Tahun 3": ["Darab Lanjutan", "Bahagi Lanjutan", "Perpuluhan", "Graf Mudah"],
+            "Tahun 4": ["Nombor Besar", "Peratus", "Luas & Isipadu"],
+            "Tahun 5": ["Purata", "Nisbah", "Koordinat"],
+            "Tahun 6": ["Soalan KBAT", "Latihan Peperiksaan Akhir"]
         };
 
-        const localization = {
-            ms: { 
-                tagline: "Pembelajaran Matematik Generasi Baru", 
-                "start-btn": "Jom Mula!", 
-                "login-title": "Log Masuk", 
-                "login-username": "E-mel / Username",
-                "login-password": "Kata Laluan",
-                "login-btn": "Masuk Sekarang",
-                "or-text": "Atau",
-                "google-login": "Log Masuk dengan Google",
-                "continue-study": "Mula Belajar", 
-                "select-level-title": "Pilih Peringkat Pembelajaran",
-                "streak-days": "Hari Streak!",
-                "challenge-title": "Cabaran Hari Ini",
-                "challenge-desc": "Selesaikan Latihan Operasi Tambah",
-                "challenge-reward": "Ganjaran: +50 Syiling, +100 XP",
-                "progress-title": "Progress Mingguan",
-                "progress-percent": "75% Selesai",
-                "badge-title": "Lencana Saya",
-                "back-btn": "Kembali",
-                "level-preschool": "🏫 Prasekolah / Tadika",
-                "level-primary": "🎒 Sekolah Rendah (KSSR)",
-                "age-4": "4 Tahun", "age-5": "5 Tahun", "age-6": "6 Tahun",
-                "year-1": "Tahun 1", "year-2": "Tahun 2", "year-3": "Tahun 3",
-                "exit-btn": "Keluar",
-                "ai-bubble-default": "Hai! Cuba kira objek ini perlahan-lahan ya.",
-                "ask-hint": "Minta Hint",
-                "check-answer": "Semak Jawapan",
-                "parent-dash-title": "Dashboard Ibu Bapa",
-                "parent-dash-status": "Status Prestasi Anak:",
-                "parent-dash-good": "Baik",
-                "footer-text": "&copy; 2026 MathGo Malaysia. Sokongan Mod Luar Talian Bersepadu."
+        // LOCALIZATION DICTIONARIES
+        const i18nTranslations = {
+            ms: {
+                tagline: "Pembelajaran Matematik Generasi Baru",
+                "btn-start": "Jom Mula!",
+                "gobot-intro": "Saya akan menjadi rakan dan guru robot matematik peribadi anda di MathGo!",
+                "btn-login-page": "Log Masuk Akaun",
+                "btn-register-page": "Daftar Akaun Baharu",
+                "login-title": "Log Masuk",
+                "register-title": "Daftar Akaun",
+                "label-email": "E-mel atau ID Pengguna",
+                "label-password": "Kata Laluan",
+                "remember-me": "Ingat Saya",
+                "forgot-pass": "Lupa kata laluan?",
+                "btn-login": "Masuk Sekarang",
+                "btn-register": "Daftar & Mula",
+                "btn-back": "Kembali",
+                "btn-learn-now": "Mula Belajar",
+                "days": "Hari",
+                "daily-challenge": "Cabaran Hari Ini 🎯",
+                "challenge-desc": "Selesaikan 2 latihan kuiz operasi tambah tanpa melakukan kesilapan!",
+                "recommendation-title": "Cadangan Sesi Belajar Seterusnya 🤖",
+                "select-level": "Pilih Peringkat Sekolah Anda",
+                "btn-exit": "Keluar",
+                "reg-name": "Nama Penuh Anak",
+                "offline-title": "Mod Luar Talian Bersepadu"
             },
-            en: { 
-                tagline: "Next-Gen Mathematics App", 
-                "start-btn": "Let's Go!", 
-                "login-title": "Sign In", 
-                "login-username": "Email / Username",
-                "login-password": "Password",
-                "login-btn": "Sign In Now",
-                "or-text": "Or",
-                "google-login": "Sign In with Google",
-                "continue-study": "Start Learning", 
-                "select-level-title": "Select Learning Level",
-                "streak-days": "Days Streak!",
-                "challenge-title": "Today's Challenge",
-                "challenge-desc": "Complete Addition Operations Exercises",
-                "challenge-reward": "Reward: +50 Coins, +100 XP",
-                "progress-title": "Weekly Progress",
-                "progress-percent": "75% Completed",
-                "badge-title": "My Badges",
-                "back-btn": "Back",
-                "level-preschool": "🏫 Preschool / Kindergarten",
-                "level-primary": "🎒 Primary School (KSSR)",
-                "age-4": "4 Years", "age-5": "5 Years", "age-6": "6 Years",
-                "year-1": "Year 1", "year-2": "Year 2", "year-3": "Year 3",
-                "exit-btn": "Exit",
-                "ai-bubble-default": "Hi! Let's count these items slowly.",
-                "ask-hint": "Get Hint",
-                "check-answer": "Check Answer",
-                "parent-dash-title": "Parent Dashboard",
-                "parent-dash-status": "Child Performance Status:",
-                "parent-dash-good": "Good",
-                "footer-text": "&copy; 2026 MathGo Malaysia. Offline Mode Supported."
+            en: {
+                tagline: "Next Generation Mathematics Learning",
+                "btn-start": "Let's Go!",
+                "gobot-intro": "I will be your personal math robot tutor and friend on MathGo!",
+                "btn-login-page": "Account Sign In",
+                "btn-register-page": "Register New Account",
+                "login-title": "Sign In",
+                "register-title": "Create Account",
+                "label-email": "Email or Username ID",
+                "label-password": "Password",
+                "remember-me": "Remember Me",
+                "forgot-pass": "Forgot password?",
+                "btn-login": "Sign In Now",
+                "btn-register": "Register & Start",
+                "btn-back": "Back",
+                "btn-learn-now": "Start Learning",
+                "days": "Days",
+                "daily-challenge": "Today's Challenge 🎯",
+                "challenge-desc": "Complete 2 addition operation quiz exercises perfectly without any errors!",
+                "recommendation-title": "Recommended Next Study Session 🤖",
+                "select-level": "Choose Your Educational Level",
+                "btn-exit": "Exit",
+                "reg-name": "Child's Full Name",
+                "offline-title": "Integrated Offline Mode Enabled"
             }
         };
 
+        // APPLICATION STATE VARIABLE LOCKS
         let currentLanguage = 'ms';
-        let currentActivityQuestions = [];
+        let exerciseQuestions = [];
         let currentQuestionIndex = 0;
-        let scoreCounter = 0;
-        let selectedAnswerString = "";
+        let runningScore = 0;
+        let selectedAnswerText = "";
 
+        // CORE ENGINE NAVIGATION CONTROLLER
         function showScreen(screenId) {
-            // Sembunyikan atau paparkan menu navigasi mengikut skrin semasa
-            const mainNav = document.getElementById('main-nav');
-            if (screenId === 'screen-splash' || screenId === 'screen-login') {
-                mainNav.classList.add('hidden');
-            } else {
-                mainNav.classList.remove('hidden');
-            }
+            // Screen switching visibility control
+            document.querySelectorAll('.screen').forEach(scr => scr.classList.remove('active'));
+            const destinationScreen = document.getElementById(screenId);
+            if (destinationScreen) destinationScreen.classList.add('active');
 
-            // Tukar paparan aktif skrin
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const targetScreen = document.getElementById(screenId);
-            if (targetScreen) {
-                targetScreen.classList.add('active');
+            // Top navbar visibility enforcement
+            const appNav = document.getElementById('app-nav');
+            if (screenId === 'screen-splash' || screenId === 'screen-onboarding' || screenId === 'screen-login' || screenId === 'screen-register') {
+                appNav.classList.add('hidden');
             } else {
-                console.error("Skrin tidak dijumpai: " + screenId);
+                appNav.classList.remove('hidden');
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function switchRoleDashboard(role) {
-            if (role === 'student') showScreen('screen-dashboard');
-            else if (role === 'parent') showScreen('screen-parent');
-            else if (role === 'admin') showScreen('screen-admin');
+        // ROLE SWITCHER DISPATCHER
+        function switchRoleDashboard(selectedRole) {
+            if (selectedRole === 'student') showScreen('screen-dashboard');
+            else if (selectedRole === 'parent') showScreen('screen-parent');
+            else if (selectedRole === 'admin') showScreen('screen-admin');
         }
 
-        function changeLanguage(lang) {
-            currentLanguage = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (localization[lang] && localization[lang][key]) {
-                    el.innerHTML = localization[lang][key];
+        // SYSTEM TRANSLATION RUNTIME ENGINE
+        function changeLanguage(langCode) {
+            currentLanguage = langCode;
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const translationKey = element.getAttribute('data-i18n');
+                if (i18nTranslations[langCode] && i18nTranslations[langCode][translationKey]) {
+                    element.innerText = i18nTranslations[langCode][translationKey];
                 }
             });
         }
 
-        function handleLogin() {
-            // Simulasi log masuk berjaya dan terus bawa ke Dashboard utama
+        // EMULATED SECURE AUTH FLOW
+        function processLogin() {
+            // Simulated validation pass
             showScreen('screen-dashboard');
+            document.getElementById('role-select').value = 'student';
         }
 
-        function loadTopics(ageGroup) {
-            document.getElementById('current-age-title').innerText = `Topik - ${ageGroup}`;
-            const container = document.getElementById('topics-list-container');
-            container.innerHTML = "";
+        function logout() {
+            showScreen('screen-onboarding');
+        }
 
-            const topics = mathGoDatabase[ageGroup] || ["Asas Nombor"];
-            topics.forEach(topic => {
+        // DYNAMIC TOPIC RENDERING SYSTEM
+        function loadTopics(yearGroup) {
+            document.getElementById('current-selected-year-title').innerText = `${yearGroup} - Topik Matematik`;
+            const topicsGrid = document.getElementById('topics-grid');
+            topicsGrid.innerHTML = "";
+
+            const specificTopics = mathGoDatabase[yearGroup] || ["Pengenalan Nombor Asas"];
+            specificTopics.forEach(topic => {
                 const card = document.createElement('div');
-                card.className = "theme-card p-5 rounded-3xl border-2 border-dashed border-sky-300 cursor-pointer bounce-hover flex justify-between items-center shadow-sm";
-                card.onclick = () => startTopicActivity(topic);
-                card.innerHTML = `<div><h4 class="font-bold text-blue-600">${topic}</h4><p class="text-xs text-gray-400">Peringkat: Mudah</p></div><span class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs"><i class="fas fa-play"></i></span>`;
-                container.appendChild(card);
+                card.className = "bg-white p-5 rounded-2xl border-2 border-dashed border-sky-200 cursor-pointer bounce-hover flex justify-between items-center shadow-sm";
+                card.onclick = () => launchTopicQuizSession(topic);
+                card.innerHTML = `
+                    <div>
+                        <h4 class="font-black text-sky-600 text-base">${topic}</h4>
+                        <p class="text-xs text-slate-400 font-bold mt-0.5"><i class="fas fa-gamepad text-emerald-400"></i> Kuiz Interaktif Adaptif</p>
+                    </div>
+                    <span class="w-10 h-10 bg-sky-500 text-white rounded-full flex items-center justify-center text-sm shadow-md"><i class="fas fa-play"></i></span>
+                `;
+                topicsGrid.appendChild(card);
             });
+
             showScreen('screen-topics');
         }
 
-        function startTopicActivity(topicName) {
-            scoreCounter = 0;
+        // ADAPTIVE ACTIVITY QUIZ GENERATOR ENGINE
+        function launchTopicQuizSession(topicName) {
+            runningScore = 0;
             currentQuestionIndex = 0;
-            currentActivityQuestions = [
-                { q: "Kira objek ini: 🍎 🍎 🍎 . Berapakah jumlahnya?", a: ["2", "3", "4", "5"], correct: "3", hint: "Kira buah epal bermula dari nombor satu." },
-                { q: "Manakah nombor yang LEBIH BESAR?", a: ["5", "9", "2", "4"], correct: "9", hint: "Sembilan mempunyai nilai kuantiti paling banyak." }
-            ];
-            loadQuestion();
+            document.getElementById('score-val').innerText = "0";
+
+            // Structural question payload generation based on context
+            if (topicName.includes("Tambah") || topicName.includes("Kira")) {
+                exerciseQuestions = [
+                    { question: "Kira jumlah objek ini: 🍎 🍎 + 🍎", options: ["2", "3", "4", "5"], answer: "3", hint: "Kira buah epal bermula dengan nombor 1, sifar tidak dikira." },
+                    { question: "Berapakah nilai hasil tambah bagi 5 + 4?", options: ["7", "8", "9", "10"], answer: "9", hint: "Gunakan jari anda atau bayangkan letak 5 dalam kepala, sambung kira 4 langkah." }
+                ];
+            } else {
+                exerciseQuestions = [
+                    { question: "Manakah kumpulan nombor yang disusun mengikut tertib menaik?", options: ["1, 2, 3, 4", "4, 3, 2, 1", "2, 4, 1, 3", "5, 1, 2, 9"], answer: "1, 2, 3, 4", hint: "Menaik bermaksud nilai semakin lama semakin tinggi atau besar." },
+                    { question: "Apakah nama bentuk geometri yang mempunyai 3 penjuru bucu tajam?", options: ["Bulatan", "Segi Empat", "Segi Tiga", "Silinder"], answer: "Segi Tiga", hint: "Cuba bayangkan bentuk bumbung rumah melayu tradisional atau potongan pizza." }
+                ];
+            }
+
+            renderCurrentQuestion();
             showScreen('screen-activity');
         }
 
-        function loadQuestion() {
-            if (currentQuestionIndex >= currentActivityQuestions.length) {
-                alert(`Latihan Selesai! Skor: ${scoreCounter * 10} Mata. Ganjaran +50 XP ditambahkan.`);
+        // QUESTION DESIGN LAYOUT RENDERER
+        function renderCurrentQuestion() {
+            if (currentQuestionIndex >= exerciseQuestions.length) {
+                // Quiz completed trigger
+                triggerConfettiBurst();
+                alert(`Tahniah! Anda telah melengkapkan kuiz ini dengan cemerlang. Skor: ${runningScore * 10} Mata diperoleh!`);
                 showScreen('screen-dashboard');
                 return;
             }
-            selectedAnswerString = "";
-            const currentQ = currentActivityQuestions[currentQuestionIndex];
-            document.getElementById('question-text').innerText = currentQ.q;
-            document.getElementById('activity-progress-bar').style.width = `${(currentQuestionIndex / currentActivityQuestions.length) * 100}%`;
 
-            const zone = document.getElementById('activity-zone');
-            zone.innerHTML = "";
-            const grid = document.createElement('div');
-            grid.className = "grid grid-cols-2 gap-4 mt-4";
+            selectedAnswerText = "";
+            const activeData = exerciseQuestions[currentQuestionIndex];
+            document.getElementById('question-text').innerText = activeData.question;
             
-            currentQ.a.forEach(ans => {
-                const btn = document.createElement('button');
-                btn.className = "p-4 bg-gray-100 rounded-2xl font-black text-xl border-2 border-gray-200 text-center option-btn theme-text cursor-pointer";
-                btn.innerText = ans;
-                btn.onclick = () => {
-                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('border-orange-500', 'bg-orange-100'));
-                    btn.classList.add('border-orange-500', 'bg-orange-100');
-                    selectedAnswerString = ans;
+            // Set tracking dynamic layout progress status
+            const currentPercentage = (currentQuestionIndex / exerciseQuestions.length) * 100;
+            document.getElementById('activity-progress').style.width = `${currentPercentage}%`;
+
+            const container = document.getElementById('answers-container');
+            container.innerHTML = "";
+
+            const innerGrid = document.createElement('div');
+            innerGrid.className = "grid grid-cols-2 gap-4";
+
+            activeData.options.forEach(opt => {
+                const optionButton = document.createElement('button');
+                optionButton.className = "p-4 bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 rounded-2xl text-xl font-black text-slate-700 text-center transition cursor-pointer opt-node";
+                optionButton.innerText = opt;
+                optionButton.onclick = () => {
+                    document.querySelectorAll('.opt-node').forEach(b => b.classList.remove('border-orange-400', 'bg-orange-50'));
+                    optionButton.classList.add('border-orange-400', 'bg-orange-50');
+                    selectedAnswerText = opt;
                 };
-                grid.appendChild(btn);
+                innerGrid.appendChild(optionButton);
             });
-            zone.appendChild(grid);
-            document.getElementById('ai-tutor-bubble').innerText = currentLanguage === 'ms' ? "Fikir baik-baik, adik pasti boleh!" : "Think carefully, you can do it!";
+
+            container.appendChild(innerGrid);
+            document.getElementById('gobot-bubble').innerText = currentLanguage === 'ms' ? `"Gunakan kepintaran adik untuk berfikir. GOBOT yakin adik pasti berjaya menjawab!"` : `"Use your smart brain cells. GOBOT believes you can handle this easily!"`;
         }
 
-        function checkSelectedAnswer() {
-            if (!selectedAnswerString) {
-                alert(currentLanguage === 'ms' ? "Sila pilih satu jawapan dahulu!" : "Please select an answer first!");
+        // ANSWER SUBMISSION VALIDATION LOGIC
+        function submitSelectedAnswer() {
+            if (!selectedAnswerText) {
+                alert(currentLanguage === 'ms' ? "Sila pilih satu pilihan jawapan terlebih dahulu!" : "Please choose one answer selection first!");
                 return;
             }
-            const currentQ = currentActivityQuestions[currentQuestionIndex];
-            if (selectedAnswerString === currentQ.correct) {
-                scoreCounter++;
-                document.getElementById('activity-score-display').innerHTML = `<i class="fas fa-star text-yellow-400"></i> ${scoreCounter * 10}`;
-                alert(currentLanguage === 'ms' ? "Hebat! Betul! 🎉" : "Awesome! Correct! 🎉");
+
+            const evaluationTarget = exerciseQuestions[currentQuestionIndex];
+            if (selectedAnswerText === evaluationTarget.answer) {
+                runningScore++;
+                document.getElementById('score-val').innerText = runningScore * 10;
+                alert(currentLanguage === 'ms' ? "Bijak! Jawapan anda TEPAT & BETUL! 🌟" : "Brilliant! Your answer is absolutely CORRECT! 🌟");
             } else {
-                alert(currentLanguage === 'ms' ? "Kurang tepat. Cuba lagi nanti!" : "Incorrect. Try again later!");
+                alert(currentLanguage === 'ms' ? `Kurang tepat. Jangan putus asa, jawapan betul ialah: ${evaluationTarget.answer}` : `Not quite right. Keep fighting, the correct answer is: ${evaluationTarget.answer}`);
             }
+
             currentQuestionIndex++;
-            loadQuestion();
+            renderCurrentQuestion();
         }
 
-        function askAITutorHint() {
-            const currentQ = currentActivityQuestions[currentQuestionIndex];
-            if (currentQ) {
-                document.getElementById('ai-tutor-bubble').innerText = `💡 Hint: "${currentQ.hint}"`;
+        // MASKOT INTELLIGENT EXPERT LOGIC
+        function triggerGobotAILogic() {
+            const currentQuestion = exerciseQuestions[currentQuestionIndex];
+            if (currentQuestion) {
+                document.getElementById('gobot-bubble').innerText = `💡 GOBOT Hint: "${currentQuestion.hint}"`;
             }
+        }
+
+        // CONFETTI CELEBRATORY TRIGGERS
+        function triggerConfettiBurst() {
+            confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
         }
     </script>
 </body>
