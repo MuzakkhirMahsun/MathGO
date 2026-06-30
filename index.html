@@ -71,7 +71,7 @@
                 <span class="absolute -top-2 -right-4 bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-full shadow-md uppercase tracking-wider">KSSR 2026</span>
             </div>
             <h1 class="text-6xl font-black text-sky-500 mt-8 tracking-wide">Math<span class="text-orange-500">Go</span>!</h1>
-            <p class="text-slate-500 text-lg font-bold mt-2" data-i18n="tagline">Pembelajaran Matematik Generasi Baru</p>
+            <p class="text-slate-500 text-lg font-bold mt-2" data-i18n="tagline">Pembelajaran Matematik Generation Baru</p>
             <div class="mt-12">
                 <button onclick="showScreen('screen-onboarding')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black px-14 py-5 rounded-3xl text-2xl shadow-xl bounce-hover transform active:scale-95 transition cursor-pointer border-b-8 border-emerald-700">
                     <span data-i18n="btn-start">Jom Mula!</span> <i class="fas fa-play ml-2"></i>
@@ -102,7 +102,7 @@
                 </div>
                 <div class="flex items-center justify-between text-xs font-bold text-sky-500 pt-1">
                     <label class="flex items-center space-x-1"><input type="checkbox" checked class="rounded"> <span data-i18n="remember-me">Ingat Saya</span></label>
-                    <a href="#" class="hover:underline" data-i18n="forgot-pass">Lupa kata laluan?</a>
+                    <button onclick="triggerForgotPassword()" class="hover:underline text-sky-500 font-bold bg-none border-none cursor-pointer" data-i18n="forgot-pass">Lupa kata laluan?</button>
                 </div>
                 <button onclick="processLogin()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black p-4 rounded-2xl shadow-md border-b-4 border-emerald-700 mt-4 cursor-pointer" data-i18n="btn-login">Masuk Sekarang</button>
                 <button onclick="showScreen('screen-onboarding')" class="w-full text-center text-slate-400 text-sm font-bold hover:underline cursor-pointer mt-2" data-i18n="btn-back">Kembali</button>
@@ -437,7 +437,6 @@
         let selectedAnswerText = "";
 
         // DYNAMIC AUTH DATA (Luar talian / LocalStorage fallbacks untuk keselamatan data)
-        // Menyediakan satu akaun demo sedia ada sekiranya sistem baru dibuka
         if (!localStorage.getItem('mathgo_users')) {
             const defaultUsers = {
                 "murid@mathgo.my": { name: "Aiman Safwan", pass: "123456" }
@@ -484,52 +483,43 @@
             const emailInput = document.getElementById('reg-email').value.trim();
             const passInput = document.getElementById('reg-pass').value.trim();
 
-            // 1. Semakan ruang kosong
             if (!nameInput || !emailInput || !passInput) {
                 alert(currentLanguage === 'ms' ? "Sila isi semua ruangan pendaftaran!" : "Please fill in all registration fields!");
                 return;
             }
 
-            // 2. Semakan format e-mel sah (Regex)
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(emailInput)) {
                 alert(currentLanguage === 'ms' ? "Sila masukkan format e-mel yang sah!" : "Please enter a valid email format!");
                 return;
             }
 
-            // 3. Semakan panjang kata laluan (Keselamatan Minimum)
             if (passInput.length < 4) {
                 alert(currentLanguage === 'ms' ? "Kata laluan mestilah sekurang-kurangnya 4 aksara!" : "Password must be at least 4 characters!");
                 return;
             }
 
-            // Ambil data akaun sedia ada dari database tempatan
             let currentUsers = JSON.parse(localStorage.getItem('mathgo_users')) || {};
 
-            // 4. Semakan jika e-mel telah berdaftar
             if (currentUsers[emailInput.toLowerCase()]) {
                 alert(currentLanguage === 'ms' ? "E-mel ini telah pun berdaftar! Sila gunakan e-mel lain atau log masuk." : "This email is already registered! Please use another email or log in.");
                 return;
             }
 
-            // Simpan pengguna baharu ke dalam sistem keselamatan
             currentUsers[emailInput.toLowerCase()] = {
                 name: nameInput,
                 pass: passInput
             };
             localStorage.setItem('mathgo_users', JSON.stringify(currentUsers));
 
-            // Set profil aktif
             document.getElementById('display-student-name').innerText = nameInput;
             document.getElementById('profile-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${nameInput}`;
 
             alert(currentLanguage === 'ms' ? "Pendaftaran Berjaya! Selamat datang ke MathGo! 🎉" : "Registration Successful! Welcome to MathGo! 🎉");
             
-            // Auto login ke dashboard
             showScreen('screen-dashboard');
             document.getElementById('role-select').value = 'student';
 
-            // Bersihkan form
             document.getElementById('reg-name').value = "";
             document.getElementById('reg-email').value = "";
             document.getElementById('reg-pass').value = "";
@@ -545,12 +535,9 @@
                 return;
             }
 
-            // Dapatkan senarai pengguna berdaftar sah
             let currentUsers = JSON.parse(localStorage.getItem('mathgo_users')) || {};
 
-            // Semakan kewujudan akaun & padanan kata laluan
             if (currentUsers[emailInput] && currentUsers[emailInput].pass === passInput) {
-                // Berjaya Log Masuk
                 const userProfile = currentUsers[emailInput];
                 document.getElementById('display-student-name').innerText = userProfile.name;
                 document.getElementById('profile-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfile.name}`;
@@ -558,14 +545,55 @@
                 showScreen('screen-dashboard');
                 document.getElementById('role-select').value = 'student';
             } else {
-                // Gagal Log Masuk (Akaun tidak wujud atau kata laluan salah)
                 alert(currentLanguage === 'ms' ? "Ralat Log Masuk! Pastikan anda telah mendaftar, e-mel sah, dan kata laluan anda betul." : "Login Error! Make sure you have registered, email is valid, and password is correct.");
+            }
+        }
+
+        // Ciri Keselamatan Lupa Kata Laluan Baharu (Dihantar E-mel Simulasi Reset)
+        function triggerForgotPassword() {
+            const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
+            
+            if (!emailInput) {
+                alert(currentLanguage === 'ms' ? 
+                    "Sila isi ruangan 'E-mel Pengguna' terlebih dahulu sebelum menekan pautan lupa kata laluan!" : 
+                    "Please fill in the 'User Email' field first before clicking the forgot password link!");
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput)) {
+                alert(currentLanguage === 'ms' ? "Sila masukkan format e-mel yang sah!" : "Please enter a valid email format!");
+                return;
+            }
+
+            let currentUsers = JSON.parse(localStorage.getItem('mathgo_users')) || {};
+
+            // Menyemak jika e-mel wujud dalam database tempatan demi ciri keselamatan akaun
+            if (currentUsers[emailInput]) {
+                const simulatedOTP = Math.floor(100000 + Math.random() * 900000);
+                
+                alert(currentLanguage === 'ms' ? 
+                    `SISTEM KESELAMATAN MATHGO:\n\nSatu e-mel penetapan semula kata laluan telah dihantar ke: ${emailInput}\n\n[Simulasi Gateway]: Pautan reset berserta PIN keselamatan anda ialah: ${simulatedOTP}. Gunakan PIN ini untuk mengemaskini maklumat.` : 
+                    `MATHGO SECURITY SYSTEM:\n\nA password reset email has been successfully sent to: ${emailInput}\n\n[Gateway Simulation]: Your secure reset link and PIN is: ${simulatedOTP}. Use this PIN to update your credentials.`);
+                
+                // Simulasi membenarkan penukaran kata laluan terus demi kemudahan pengguna
+                const newPassword = prompt(currentLanguage === 'ms' ? "Masukkan kata laluan baru anda:" : "Enter your new password:");
+                if (newPassword && newPassword.trim().length >= 4) {
+                    currentUsers[emailInput].pass = newPassword.trim();
+                    localStorage.setItem('mathgo_users', JSON.stringify(currentUsers));
+                    alert(currentLanguage === 'ms' ? "Kata laluan anda berjaya dikemaskini! Sila log masuk semula." : "Password updated successfully! Please log in again.");
+                } else if (newPassword) {
+                    alert(currentLanguage === 'ms' ? "Kata laluan baru terlalu pendek (Minima 4 aksara)!" : "New password is too short (Minimum 4 characters)!");
+                }
+            } else {
+                alert(currentLanguage === 'ms' ? 
+                    "Ralat Keselamatan: E-mel ini tidak ditemui dalam rekod pendaftaran sistem MathGo!" : 
+                    "Security Error: This email was not found in the MathGo system registration records!");
             }
         }
 
         function logout() {
             showScreen('screen-onboarding');
-            // Bersihkan input login untuk keselamatan
             document.getElementById('login-email').value = "";
             document.getElementById('login-pass').value = "";
         }
