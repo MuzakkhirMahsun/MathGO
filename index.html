@@ -22,7 +22,7 @@
         .theme-card { background-color: #FFFFFF; color: #1E293B; }
         .theme-text { color: #1E293B; }
 
-        /* Smooth Animasi */
+        /* Animations & Screen Toggle */
         .bounce-hover:hover {
             transform: translateY(-5px) scale(1.02);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -40,12 +40,12 @@
         </div>
         
         <div class="flex items-center space-x-3">
-            <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-gray-100 text-sm p-1.5 rounded-full border-none font-bold theme-text">
+            <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-gray-100 text-sm p-1.5 rounded-full border-none font-bold theme-text cursor-pointer">
                 <option value="ms">🇲🇾 BM</option>
                 <option value="en">🇬🇧 EN</option>
             </select>
             
-            <select id="role-select" onchange="switchRoleDashboard(this.value)" class="bg-orange-100 text-xs p-1.5 rounded-md font-bold text-orange-700">
+            <select id="role-select" onchange="switchRoleDashboard(this.value)" class="bg-orange-100 text-xs p-1.5 rounded-md font-bold text-orange-700 cursor-pointer">
                 <option value="student">👦 You</option>
                 <option value="parent">👨‍👩‍👦 Ibu Bapa</option>
                 <option value="admin">⚙️ Admin</option>
@@ -65,7 +65,7 @@
             <h1 class="text-5xl font-black text-blue-500 mt-6 tracking-wide">Math<span class="text-orange-500">Go</span>!</h1>
             <p class="text-gray-500 font-medium mt-2" data-i18n="tagline">Pembelajaran Matematik Generasi Baru</p>
             <div class="mt-10">
-                <button onclick="showScreen('screen-onboarding')" class="bg-green-500 hover:bg-green-600 text-white font-extrabold px-12 py-4 rounded-full text-xl shadow-lg bounce-hover transform transition duration-150">
+                <button onclick="showScreen('screen-onboarding')" class="bg-green-500 hover:bg-green-600 text-white font-extrabold px-12 py-4 rounded-full text-xl shadow-lg bounce-hover transform transition duration-150 cursor-pointer">
                     <span id="start-btn-text" data-i18n="start-btn">Jom Mula!</span> <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </div>
@@ -103,7 +103,7 @@
                     <label class="block text-sm font-bold mb-1" data-i18n="login-password">Kata Laluan</label>
                     <input type="password" id="login-pass" value="123456" class="w-full p-3 rounded-xl border-2 border-gray-200 text-sm outline-none focus:border-blue-400 theme-text">
                 </div>
-                <button onclick="handleLogin()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold p-3 rounded-xl mt-2 shadow-md" data-i18n="login-btn">
+                <button onclick="handleLogin()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold p-3 rounded-xl mt-2 shadow-md cursor-pointer" data-i18n="login-btn">
                     Masuk Sekarang
                 </button>
                 <div class="relative flex py-2 items-center">
@@ -111,7 +111,7 @@
                     <span class="flex-shrink mx-4 text-gray-400 text-xs uppercase" data-i18n="or-text">Atau</span>
                     <div class="flex-grow border-t border-gray-300"></div>
                 </div>
-                <button onclick="handleLogin()" class="w-full bg-white text-gray-700 border-2 border-gray-200 font-bold p-3 rounded-xl flex items-center justify-center space-x-2 hover:bg-gray-50">
+                <button onclick="handleLogin()" class="w-full bg-white text-gray-700 border-2 border-gray-200 font-bold p-3 rounded-xl flex items-center justify-center space-x-2 hover:bg-gray-50 cursor-pointer">
                     <i class="fab fa-google text-red-500"></i> <span class="text-gray-700" data-i18n="google-login">Log Masuk dengan Google</span>
                 </button>
             </div>
@@ -134,7 +134,7 @@
                     <i class="fas fa-fire text-orange-500 text-xl animate-pulse"></i>
                     <span class="text-sm font-black"><span id="dash-streak">5</span> <span data-i18n="streak-days">Hari Streak!</span></span>
                 </div>
-                <button onclick="showScreen('screen-age-select')" class="bg-green-400 hover:bg-green-500 text-white font-black text-sm p-3 rounded-2xl shadow-md transform active:scale-95 transition">
+                <button onclick="showScreen('screen-age-select')" class="bg-green-400 hover:bg-green-500 text-white font-black text-sm p-3 rounded-2xl shadow-md transform active:scale-95 transition cursor-pointer">
                     <i class="fas fa-play-circle mr-1"></i> <span data-i18n="continue-study">Mula Belajar</span>
                 </button>
             </div>
@@ -172,36 +172,36 @@
         </div>
 
         <div id="screen-age-select" class="screen">
-            <button onclick="showScreen('screen-dashboard')" class="text-blue-500 font-bold text-sm mb-4"><i class="fas fa-arrow-left"></i> <span data-i18n="back-btn">Kembali</span></button>
+            <button onclick="showScreen('screen-dashboard')" class="text-blue-500 font-bold text-sm mb-4 cursor-pointer"><i class="fas fa-arrow-left"></i> <span data-i18n="back-btn">Kembali</span></button>
             <h2 class="text-3xl font-black text-center mb-8" data-i18n="select-level-title">Pilih Peringkat Pembelajaran</h2>
             
             <div class="mb-8">
                 <h3 class="text-xl font-extrabold text-blue-500 mb-3 border-b pb-1" data-i18n="level-preschool">🏫 Prasekolah / Tadika</h3>
                 <div class="grid grid-cols-3 gap-3">
-                    <button onclick="loadTopics('Tadika 4')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center" data-i18n="age-4">4 Tahun</button>
-                    <button onclick="loadTopics('Tadika 5')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center" data-i18n="age-5">5 Tahun</button>
-                    <button onclick="loadTopics('Tadika 6')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center" data-i18n="age-6">6 Tahun</button>
+                    <button onclick="loadTopics('Tadika 4')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="age-4">4 Tahun</button>
+                    <button onclick="loadTopics('Tadika 5')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="age-5">5 Tahun</button>
+                    <button onclick="loadTopics('Tadika 6')" class="bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="age-6">6 Tahun</button>
                 </div>
             </div>
             <div>
                 <h3 class="text-xl font-extrabold text-green-500 mb-3 border-b pb-1" data-i18n="level-primary">🎒 Sekolah Rendah (KSSR)</h3>
                 <div class="grid grid-cols-3 gap-3">
-                    <button onclick="loadTopics('Tahun 1')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center" data-i18n="year-1">Tahun 1</button>
-                    <button onclick="loadTopics('Tahun 2')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center" data-i18n="year-2">Tahun 2</button>
-                    <button onclick="loadTopics('Tahun 3')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center" data-i18n="year-3">Tahun 3</button>
+                    <button onclick="loadTopics('Tahun 1')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="year-1">Tahun 1</button>
+                    <button onclick="loadTopics('Tahun 2')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="year-2">Tahun 2</button>
+                    <button onclick="loadTopics('Tahun 3')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold p-4 rounded-2xl text-center cursor-pointer" data-i18n="year-3">Tahun 3</button>
                 </div>
             </div>
         </div>
 
         <div id="screen-topics" class="screen">
-            <button onclick="showScreen('screen-age-select')" class="text-blue-500 font-bold text-sm mb-4"><i class="fas fa-arrow-left"></i> <span data-i18n="back-btn">Kembali</span></button>
+            <button onclick="showScreen('screen-age-select')" class="text-blue-500 font-bold text-sm mb-4 cursor-pointer"><i class="fas fa-arrow-left"></i> <span data-i18n="back-btn">Kembali</span></button>
             <h2 id="current-age-title" class="text-2xl font-black mb-6 text-center">Topik Matematik</h2>
             <div id="topics-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
         <div id="screen-activity" class="screen max-w-xl mx-auto">
             <div class="flex justify-between items-center mb-4">
-                <button onclick="showScreen('screen-topics')" class="text-red-500 font-bold text-sm"><i class="fas fa-times"></i> <span data-i18n="exit-btn">Keluar</span></button>
+                <button onclick="showScreen('screen-topics')" class="text-red-500 font-bold text-sm cursor-pointer"><i class="fas fa-times"></i> <span data-i18n="exit-btn">Keluar</span></button>
                 <div class="flex-grow mx-4">
                     <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
                         <div id="activity-progress-bar" class="bg-blue-500 h-full w-0 transition-all"></div>
@@ -220,11 +220,11 @@
                 <div>
                     <h4 class="font-black text-xs text-blue-600">MathGo Buddy <span class="bg-blue-200 text-blue-800 text-[9px] px-1.5 py-0.5 rounded-full uppercase ml-1">AI Tutor</span></h4>
                     <p id="ai-tutor-bubble" class="text-xs text-gray-600 mt-1 italic" data-i18n="ai-bubble-default">Hai! Cuba kira objek ini perlahan-lahan ya.</p>
-                    <button onclick="askAITutorHint()" class="mt-2 text-[11px] font-bold text-indigo-500 hover:underline"><i class="far fa-lightbulb"></i> <span data-i18n="ask-hint">Minta Hint</span></button>
+                    <button onclick="askAITutorHint()" class="mt-2 text-[11px] font-bold text-indigo-500 hover:underline cursor-pointer"><i class="far fa-lightbulb"></i> <span data-i18n="ask-hint">Minta Hint</span></button>
                 </div>
             </div>
 
-            <button onclick="checkSelectedAnswer()" class="w-full bg-green-500 hover:bg-green-600 text-white font-black p-4 rounded-2xl text-lg shadow-md mt-6" data-i18n="check-answer">
+            <button onclick="checkSelectedAnswer()" class="w-full bg-green-500 hover:bg-green-600 text-white font-black p-4 rounded-2xl text-lg shadow-md mt-6 cursor-pointer" data-i18n="check-answer">
                 Semak Jawapan <i class="fas fa-check-circle ml-1"></i>
             </button>
         </div>
@@ -301,7 +301,7 @@
                 "parent-dash-title": "Dashboard Ibu Bapa",
                 "parent-dash-status": "Status Prestasi Anak:",
                 "parent-dash-good": "Baik",
-                "footer-text": "© 2026 MathGo Malaysia. Sokongan Mod Luar Talian Bersepadu."
+                "footer-text": "&copy; 2026 MathGo Malaysia. Sokongan Mod Luar Talian Bersepadu."
             },
             en: { 
                 tagline: "Next-Gen Mathematics App", 
@@ -322,4 +322,145 @@
                 "streak-days": "Days Streak!",
                 "challenge-title": "Today's Challenge",
                 "challenge-desc": "Complete Addition Operations Exercises",
-                "challenge
+                "challenge-reward": "Reward: +50 Coins, +100 XP",
+                "progress-title": "Weekly Progress",
+                "progress-percent": "75% Completed",
+                "badge-title": "My Badges",
+                "back-btn": "Back",
+                "level-preschool": "🏫 Preschool / Kindergarten",
+                "level-primary": "🎒 Primary School (KSSR)",
+                "age-4": "4 Years", "age-5": "5 Years", "age-6": "6 Years",
+                "year-1": "Year 1", "year-2": "Year 2", "year-3": "Year 3",
+                "exit-btn": "Exit",
+                "ai-bubble-default": "Hi! Let's count these items slowly.",
+                "ask-hint": "Get Hint",
+                "check-answer": "Check Answer",
+                "parent-dash-title": "Parent Dashboard",
+                "parent-dash-status": "Child Performance Status:",
+                "parent-dash-good": "Good",
+                "footer-text": "&copy; 2026 MathGo Malaysia. Offline Mode Supported."
+            }
+        };
+
+        let currentLanguage = 'ms';
+        let currentActivityQuestions = [];
+        let currentQuestionIndex = 0;
+        let scoreCounter = 0;
+        let selectedAnswerString = "";
+
+        function showScreen(screenId) {
+            // Tutup semua skrin
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Buka skrin sasaran
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            } else {
+                console.error("Skrin tidak dijumpai: " + screenId);
+            }
+        }
+
+        function switchRoleDashboard(role) {
+            if (role === 'student') showScreen('screen-dashboard');
+            else if (role === 'parent') showScreen('screen-parent');
+            else if (role === 'admin') showScreen('screen-admin');
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (localization[lang] && localization[lang][key]) {
+                    el.innerHTML = localization[lang][key];
+                }
+            });
+        }
+
+        function handleLogin() {
+            showScreen('screen-dashboard');
+        }
+
+        function loadTopics(ageGroup) {
+            document.getElementById('current-age-title').innerText = `Topik - ${ageGroup}`;
+            const container = document.getElementById('topics-list-container');
+            container.innerHTML = "";
+
+            const topics = mathGoDatabase[ageGroup] || ["Asas Nombor"];
+            topics.forEach(topic => {
+                const card = document.createElement('div');
+                card.className = "theme-card p-5 rounded-3xl border-2 border-dashed border-sky-300 cursor-pointer bounce-hover flex justify-between items-center shadow-sm";
+                card.onclick = () => startTopicActivity(topic);
+                card.innerHTML = `<div><h4 class="font-bold text-blue-600">${topic}</h4><p class="text-xs text-gray-400">Peringkat: Mudah</p></div><span class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs"><i class="fas fa-play"></i></span>`;
+                container.appendChild(card);
+            });
+            showScreen('screen-topics');
+        }
+
+        function startTopicActivity(topicName) {
+            scoreCounter = 0;
+            currentQuestionIndex = 0;
+            currentActivityQuestions = [
+                { q: "Kira objek ini: 🍎 🍎 🍎 . Berapakah jumlahnya?", a: ["2", "3", "4", "5"], correct: "3", hint: "Kira buah epal bermula dari nombor satu." },
+                { q: "Manakah nombor yang LEBIH BESAR?", a: ["5", "9", "2", "4"], correct: "9", hint: "Sembilan mempunyai nilai kuantiti paling banyak." }
+            ];
+            loadQuestion();
+            showScreen('screen-activity');
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= currentActivityQuestions.length) {
+                alert(`Latihan Selesai! Skor: ${scoreCounter * 10} Mata. Ganjaran +50 XP ditambahkan.`);
+                showScreen('screen-dashboard');
+                return;
+            }
+            selectedAnswerString = "";
+            const currentQ = currentActivityQuestions[currentQuestionIndex];
+            document.getElementById('question-text').innerText = currentQ.q;
+            document.getElementById('activity-progress-bar').style.width = `${(currentQuestionIndex / currentActivityQuestions.length) * 100}%`;
+
+            const zone = document.getElementById('activity-zone');
+            zone.innerHTML = "";
+            const grid = document.createElement('div');
+            grid.className = "grid grid-cols-2 gap-4 mt-4";
+            
+            currentQ.a.forEach(ans => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 bg-gray-100 rounded-2xl font-black text-xl border-2 border-gray-200 text-center option-btn theme-text cursor-pointer";
+                btn.innerText = ans;
+                btn.onclick = () => {
+                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('border-orange-500', 'bg-orange-100'));
+                    btn.classList.add('border-orange-500', 'bg-orange-100');
+                    selectedAnswerString = ans;
+                };
+                grid.appendChild(btn);
+            });
+            zone.appendChild(grid);
+            document.getElementById('ai-tutor-bubble').innerText = currentLanguage === 'ms' ? "Fikir baik-baik, adik pasti boleh!" : "Think carefully, you can do it!";
+        }
+
+        function checkSelectedAnswer() {
+            if (!selectedAnswerString) {
+                alert(currentLanguage === 'ms' ? "Sila pilih satu jawapan dahulu!" : "Please select an answer first!");
+                return;
+            }
+            const currentQ = currentActivityQuestions[currentQuestionIndex];
+            if (selectedAnswerString === currentQ.correct) {
+                scoreCounter++;
+                document.getElementById('activity-score-display').innerHTML = `<i class="fas fa-star text-yellow-400"></i> ${scoreCounter * 10}`;
+                alert(currentLanguage === 'ms' ? "Hebat! Betul! 🎉" : "Awesome! Correct! 🎉");
+            } else {
+                alert(currentLanguage === 'ms' ? "Kurang tepat. Cuba lagi nanti!" : "Incorrect. Try again later!");
+            }
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function askAITutorHint() {
+            const currentQ = currentActivityQuestions[currentQuestionIndex];
+            if (currentQ) {
+                document.getElementById('ai-tutor-bubble').innerText = `💡 Hint: "${currentQ.hint}"`;
+            }
+        }
+    </script>
+</body>
+</html>
