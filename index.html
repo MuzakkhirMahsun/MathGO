@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathGo! - Aplikasi Pembelajaran Matematik Interaktif KSSR</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Fredoka untuk Kanak-kanak, Nunito untuk Teks Biasa -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Canvas Confetti untuk Impak Kejayaan -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
@@ -43,7 +39,6 @@
 </head>
 <body class="text-slate-800 flex flex-col min-h-screen">
 
-    <!-- GLOBAL NAVIGATION BAR -->
     <nav id="app-nav" class="bg-white border-b-4 border-sky-100 px-4 py-3 sticky top-0 z-50 flex justify-between items-center hidden shadow-sm">
         <div class="flex items-center space-x-2 cursor-pointer" onclick="showScreen('screen-dashboard')">
             <div class="bg-amber-400 p-2 rounded-full shadow-md text-white font-black text-xl w-10 h-10 flex items-center justify-center animate-pulse">MG</div>
@@ -51,28 +46,23 @@
         </div>
         
         <div class="flex items-center space-x-3">
-            <!-- Language Selector -->
             <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-slate-100 text-sm font-black p-2 rounded-xl border-2 border-slate-200 cursor-pointer text-slate-700 outline-none">
                 <option value="ms">🇲🇾 BM</option>
                 <option value="en">🇬🇧 EN</option>
             </select>
             
-            <!-- Quick Role Switcher for Demo / Testing Purposes -->
             <select id="role-select" onchange="switchRoleDashboard(this.value)" class="bg-amber-100 text-xs font-bold p-2 rounded-xl border-none text-amber-800 cursor-pointer outline-none">
                 <option value="student">👦 Murid (You)</option>
                 <option value="parent">👨‍👩‍👦 Ibu Bapa</option>
                 <option value="admin">⚙️ Pentadbir</option>
             </select>
             
-            <!-- Logout Icon -->
             <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition text-lg p-2"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </nav>
 
-    <!-- MAIN INTERACTIVE CONTAINER -->
     <main class="flex-grow container mx-auto max-w-4xl p-4 flex flex-col justify-center">
 
-        <!-- 1. SPLASH SCREEN -->
         <div id="screen-splash" class="screen active text-center py-12">
             <div class="relative inline-block">
                 <div class="w-48 h-48 bg-gradient-to-tr from-sky-400 via-emerald-400 to-amber-300 rounded-full flex items-center justify-center shadow-2xl mx-auto transform animate-bounce">
@@ -89,7 +79,6 @@
             </div>
         </div>
 
-        <!-- 2. ONBOARDING SCREEN -->
         <div id="screen-onboarding" class="screen text-center max-w-md mx-auto bg-white p-8 rounded-3xl shadow-xl border-4 border-sky-100">
             <img src="https://api.dicebear.com/7.x/bottts/svg?seed=GOBOT" class="w-32 h-32 mx-auto mb-4 bg-sky-100 rounded-full p-2" alt="GOBOT">
             <h2 class="text-3xl font-black text-sky-500 mb-2">Hai, Saya GOBOT!</h2>
@@ -100,17 +89,16 @@
             </div>
         </div>
 
-        <!-- 3. LOGIN SCREEN -->
         <div id="screen-login" class="screen max-w-sm mx-auto bg-white p-8 rounded-3xl shadow-xl border-4 border-sky-100">
             <h2 class="text-3xl font-black text-center text-slate-800 mb-6" data-i18n="login-title">Log Masuk</h2>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-email">E-mel atau ID Pengguna</label>
-                    <input type="email" id="login-email" value="murid@mathgo.my" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 outline-none focus:border-sky-400 font-bold text-slate-700">
+                    <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-email">E-mel Pengguna</label>
+                    <input type="email" id="login-email" placeholder="contoh@mathgo.my" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 outline-none focus:border-sky-400 font-bold text-slate-700">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-password">Kata Laluan</label>
-                    <input type="password" id="login-pass" value="123456" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 outline-none focus:border-sky-400 font-bold text-slate-700">
+                    <input type="password" id="login-pass" placeholder="******" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 outline-none focus:border-sky-400 font-bold text-slate-700">
                 </div>
                 <div class="flex items-center justify-between text-xs font-bold text-sky-500 pt-1">
                     <label class="flex items-center space-x-1"><input type="checkbox" checked class="rounded"> <span data-i18n="remember-me">Ingat Saya</span></label>
@@ -121,35 +109,32 @@
             </div>
         </div>
 
-        <!-- 4. REGISTER SCREEN -->
         <div id="screen-register" class="screen max-w-sm mx-auto bg-white p-8 rounded-3xl shadow-xl border-4 border-sky-100">
             <h2 class="text-3xl font-black text-center text-slate-800 mb-6" data-i18n="register-title">Daftar Akaun</h2>
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="reg-name">Nama Penuh Anak</label>
-                    <input type="text" placeholder="Aiman" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700">
+                    <input type="text" id="reg-name" placeholder="Aiman" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700 outline-none focus:border-sky-400">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-email">E-mel Ibu Bapa</label>
-                    <input type="email" placeholder="ibu@gmail.com" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700">
+                    <input type="email" id="reg-email" placeholder="ibu@gmail.com" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700 outline-none focus:border-sky-400">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-600 mb-1" data-i18n="label-password">Kata Laluan</label>
-                    <input type="password" placeholder="******" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700">
+                    <input type="password" id="reg-pass" placeholder="******" class="w-full p-3.5 rounded-xl bg-slate-50 border-2 border-slate-200 font-bold text-slate-700 outline-none focus:border-sky-400">
                 </div>
-                <button onclick="processLogin()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black p-4 rounded-2xl shadow-md border-b-4 border-orange-700 mt-4 cursor-pointer" data-i18n="btn-register">Daftar & Mula</button>
+                <button onclick="processRegister()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black p-4 rounded-2xl shadow-md border-b-4 border-orange-700 mt-4 cursor-pointer" data-i18n="btn-register">Daftar & Mula</button>
                 <button onclick="showScreen('screen-onboarding')" class="w-full text-center text-slate-400 text-sm font-bold hover:underline cursor-pointer mt-2" data-i18n="btn-back">Kembali</button>
             </div>
         </div>
 
-        <!-- 5. STUDENT DASHBOARD -->
         <div id="screen-dashboard" class="screen">
-            <!-- Top Status Profile Card -->
             <div class="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 rounded-3xl p-6 text-white shadow-xl mb-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                 <div class="flex items-center space-x-4">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Aiman" class="w-16 h-16 bg-white rounded-full p-1 border-4 border-sky-200 shadow-md" alt="Avatar">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Aiman" id="profile-avatar" class="w-16 h-16 bg-white rounded-full p-1 border-4 border-sky-200 shadow-md" alt="Avatar">
                     <div>
-                        <h2 class="text-2xl font-black tracking-wide">Aiman Safwan</h2>
+                        <h2 class="text-2xl font-black tracking-wide" id="display-student-name">Aiman Safwan</h2>
                         <span class="bg-amber-400 text-slate-900 text-xs px-3 py-1 rounded-full font-black uppercase tracking-wider shadow-inner">Tahap / LV 3</span>
                     </div>
                 </div>
@@ -179,11 +164,8 @@
                 </div>
             </div>
 
-            <!-- Content Area Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Left Content Area -->
                 <div class="md:col-span-2 space-y-6">
-                    <!-- Daily Challenge Section -->
                     <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-amber-100 relative overflow-hidden">
                         <div class="absolute -top-6 -right-6 w-24 h-24 bg-amber-50 rounded-full flex items-center justify-center">
                             <i class="fas fa-trophy text-amber-400 text-3xl"></i>
@@ -195,7 +177,6 @@
                         </div>
                     </div>
 
-                    <!-- Adaptive Recommendations -->
                     <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-indigo-50">
                         <h3 class="text-xl font-black text-indigo-500 mb-3" data-i18n="recommendation-title">Cadangan Sesi Belajar Seterusnya 🤖</h3>
                         <div onclick="loadTopics('Tahun 1')" class="bg-slate-50 hover:bg-indigo-50/50 p-4 rounded-2xl border-2 border-dashed border-indigo-200 flex justify-between items-center cursor-pointer transition">
@@ -211,9 +192,7 @@
                     </div>
                 </div>
 
-                <!-- Right Side Widgets -->
                 <div class="space-y-6">
-                    <!-- Pet Badges / Rewards Vault -->
                     <div class="bg-white p-5 rounded-3xl shadow-md border-2 border-emerald-50 text-center">
                         <h3 class="text-sm font-black text-emerald-600 uppercase tracking-wider mb-4 text-left"><i class="fas fa-shield-cat mr-1"></i> Lencana & Kedudukan</h3>
                         <div class="grid grid-cols-3 gap-3">
@@ -223,7 +202,6 @@
                         </div>
                     </div>
 
-                    <!-- Offline Mode Status Widget -->
                     <div class="bg-sky-50 border-2 border-dashed border-sky-200 p-4 rounded-2xl flex items-center space-x-3">
                         <i class="fas fa-wifi-slash text-sky-500 text-xl animate-pulse"></i>
                         <div>
@@ -235,12 +213,10 @@
             </div>
         </div>
 
-        <!-- 6. LEVEL / YEAR SELECTION -->
         <div id="screen-years" class="screen">
             <button onclick="showScreen('screen-dashboard')" class="text-sky-500 font-black text-sm mb-4 cursor-pointer hover:underline"><i class="fas fa-arrow-left mr-1"></i> <span data-i18n="btn-back">Kembali</span></button>
             <h2 class="text-3xl font-black text-center text-slate-800 mb-8" data-i18n="select-level">Pilih Peringkat Sekolah Anda</h2>
             
-            <!-- Tadika Section -->
             <div class="mb-8 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
                 <h3 class="text-xl font-black text-orange-500 mb-4 flex items-center"><i class="fas fa-school-flag mr-2"></i> Peringkat Prasekolah / Tadika</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -250,7 +226,6 @@
                 </div>
             </div>
 
-            <!-- Primary School Section -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
                 <h3 class="text-xl font-black text-sky-500 mb-4 flex items-center"><i class="fas fa-graduation-cap mr-2"></i> Sekolah Rendah (KSSR)</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -264,18 +239,14 @@
             </div>
         </div>
 
-        <!-- 7. TOPIC SELECTION SCREEN -->
         <div id="screen-topics" class="screen">
             <button onclick="showScreen('screen-years')" class="text-sky-500 font-black text-sm mb-4 cursor-pointer hover:underline"><i class="fas fa-arrow-left mr-1"></i> <span data-i18n="btn-back">Kembali</span></button>
             <h2 id="current-selected-year-title" class="text-3xl font-black mb-6 text-slate-800 text-center">Topik Matematik</h2>
             <div id="topics-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Diisi secara dinamik menerusi JavaScript -->
-            </div>
+                </div>
         </div>
 
-        <!-- 8. ACTIVITY GAME ZONE (EXERCISE & QUIZ) -->
         <div id="screen-activity" class="screen max-w-xl mx-auto">
-            <!-- Header Top Bar Info -->
             <div class="flex justify-between items-center mb-4">
                 <button onclick="showScreen('screen-topics')" class="text-red-500 font-black text-sm cursor-pointer hover:underline"><i class="fas fa-times-circle mr-1"></i> <span data-i18n="btn-exit">Keluar</span></button>
                 <div class="flex-grow mx-4">
@@ -286,15 +257,12 @@
                 <div id="quiz-score-badge" class="bg-amber-100 text-amber-700 font-black text-sm px-3 py-1.5 rounded-full border border-amber-300"><i class="fas fa-star text-amber-400"></i> <span id="score-val">0</span></div>
             </div>
 
-            <!-- Question Card Base -->
             <div class="bg-white p-8 rounded-3xl shadow-xl border-4 border-sky-200 text-center relative mb-6">
                 <div id="question-text" class="text-2xl font-black text-slate-800 my-4">Sila pilih topik latihan...</div>
                 <div id="answers-container" class="my-6">
-                    <!-- Pilihan jawapan dimuatkan secara dinamik -->
-                </div>
+                    </div>
             </div>
 
-            <!-- GOBOT THE AI TUTOR PANEL -->
             <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-sky-400 flex items-start space-x-3 shadow-sm relative">
                 <img src="https://api.dicebear.com/7.x/bottts/svg?seed=GOBOT" class="w-12 h-12 bg-sky-100 rounded-full p-1 border-2 border-sky-300" alt="GOBOT">
                 <div class="flex-grow">
@@ -314,7 +282,6 @@
             </button>
         </div>
 
-        <!-- 9. PARENT DASHBOARD MONITORING -->
         <div id="screen-parent" class="screen bg-white p-6 rounded-3xl shadow-xl border-4 border-emerald-100">
             <h2 class="text-3xl font-black text-slate-800 mb-2 flex items-center"><i class="fas fa-user-shield text-emerald-500 mr-2"></i> Dashboard Ibu Bapa</h2>
             <p class="text-sm text-slate-400 font-medium mb-6">Pantau aktiviti pembelajaran harian dan pencapaian akademik anak anda.</p>
@@ -342,7 +309,6 @@
             </div>
         </div>
 
-        <!-- 10. SYSTEM CENTRAL ADMIN PANEL -->
         <div id="screen-admin" class="screen bg-white p-6 rounded-3xl shadow-xl border-4 border-slate-700">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
                 <h2 class="text-2xl font-black text-slate-800 flex items-center"><i class="fas fa-sliders-h text-slate-600 mr-2"></i> Panel Pentadbir MathGo</h2>
@@ -373,7 +339,6 @@
 
     </main>
 
-    <!-- FOOTER SYSTEM STATUS -->
     <footer class="bg-white border-t-4 border-sky-100 text-center p-3 text-xs font-bold text-slate-400 mt-8 shadow-inner">
         <div class="container mx-auto max-w-4xl flex flex-col sm:flex-row justify-between items-center">
             <p id="footer-text">&copy; 2026 MathGo Malaysia. Sistem Silabus Matematik KSSR.</p>
@@ -385,7 +350,6 @@
         </div>
     </footer>
 
-    <!-- INTERACTIVE ENGINE CORE JAVASCRIPT -->
     <script>
         // FIREBASE CONFIGURATION REPLICA AS PROVIDED
         const firebaseConfig = {
@@ -421,7 +385,7 @@
                 "btn-register-page": "Daftar Akaun Baharu",
                 "login-title": "Log Masuk",
                 "register-title": "Daftar Akaun",
-                "label-email": "E-mel atau ID Pengguna",
+                "label-email": "E-mel Pengguna",
                 "label-password": "Kata Laluan",
                 "remember-me": "Ingat Saya",
                 "forgot-pass": "Lupa kata laluan?",
@@ -446,7 +410,7 @@
                 "btn-register-page": "Register New Account",
                 "login-title": "Sign In",
                 "register-title": "Create Account",
-                "label-email": "Email or Username ID",
+                "label-email": "User Email",
                 "label-password": "Password",
                 "remember-me": "Remember Me",
                 "forgot-pass": "Forgot password?",
@@ -472,14 +436,21 @@
         let runningScore = 0;
         let selectedAnswerText = "";
 
+        // DYNAMIC AUTH DATA (Luar talian / LocalStorage fallbacks untuk keselamatan data)
+        // Menyediakan satu akaun demo sedia ada sekiranya sistem baru dibuka
+        if (!localStorage.getItem('mathgo_users')) {
+            const defaultUsers = {
+                "murid@mathgo.my": { name: "Aiman Safwan", pass: "123456" }
+            };
+            localStorage.setItem('mathgo_users', JSON.stringify(defaultUsers));
+        }
+
         // CORE ENGINE NAVIGATION CONTROLLER
         function showScreen(screenId) {
-            // Screen switching visibility control
             document.querySelectorAll('.screen').forEach(scr => scr.classList.remove('active'));
             const destinationScreen = document.getElementById(screenId);
             if (destinationScreen) destinationScreen.classList.add('active');
 
-            // Top navbar visibility enforcement
             const appNav = document.getElementById('app-nav');
             if (screenId === 'screen-splash' || screenId === 'screen-onboarding' || screenId === 'screen-login' || screenId === 'screen-register') {
                 appNav.classList.add('hidden');
@@ -507,15 +478,96 @@
             });
         }
 
-        // EMULATED SECURE AUTH FLOW
-        function processLogin() {
-            // Simulated validation pass
+        // FUNGSI KESELAMATAN PENDAFTARAN (REGISTER) YANG BARU & SAH
+        function processRegister() {
+            const nameInput = document.getElementById('reg-name').value.trim();
+            const emailInput = document.getElementById('reg-email').value.trim();
+            const passInput = document.getElementById('reg-pass').value.trim();
+
+            // 1. Semakan ruang kosong
+            if (!nameInput || !emailInput || !passInput) {
+                alert(currentLanguage === 'ms' ? "Sila isi semua ruangan pendaftaran!" : "Please fill in all registration fields!");
+                return;
+            }
+
+            // 2. Semakan format e-mel sah (Regex)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput)) {
+                alert(currentLanguage === 'ms' ? "Sila masukkan format e-mel yang sah!" : "Please enter a valid email format!");
+                return;
+            }
+
+            // 3. Semakan panjang kata laluan (Keselamatan Minimum)
+            if (passInput.length < 4) {
+                alert(currentLanguage === 'ms' ? "Kata laluan mestilah sekurang-kurangnya 4 aksara!" : "Password must be at least 4 characters!");
+                return;
+            }
+
+            // Ambil data akaun sedia ada dari database tempatan
+            let currentUsers = JSON.parse(localStorage.getItem('mathgo_users')) || {};
+
+            // 4. Semakan jika e-mel telah berdaftar
+            if (currentUsers[emailInput.toLowerCase()]) {
+                alert(currentLanguage === 'ms' ? "E-mel ini telah pun berdaftar! Sila gunakan e-mel lain atau log masuk." : "This email is already registered! Please use another email or log in.");
+                return;
+            }
+
+            // Simpan pengguna baharu ke dalam sistem keselamatan
+            currentUsers[emailInput.toLowerCase()] = {
+                name: nameInput,
+                pass: passInput
+            };
+            localStorage.setItem('mathgo_users', JSON.stringify(currentUsers));
+
+            // Set profil aktif
+            document.getElementById('display-student-name').innerText = nameInput;
+            document.getElementById('profile-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${nameInput}`;
+
+            alert(currentLanguage === 'ms' ? "Pendaftaran Berjaya! Selamat datang ke MathGo! 🎉" : "Registration Successful! Welcome to MathGo! 🎉");
+            
+            // Auto login ke dashboard
             showScreen('screen-dashboard');
             document.getElementById('role-select').value = 'student';
+
+            // Bersihkan form
+            document.getElementById('reg-name').value = "";
+            document.getElementById('reg-email').value = "";
+            document.getElementById('reg-pass').value = "";
+        }
+
+        // FUNGSI KESELAMATAN LOG MASUK (LOGIN) YANG SECURE
+        function processLogin() {
+            const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
+            const passInput = document.getElementById('login-pass').value.trim();
+
+            if (!emailInput || !passInput) {
+                alert(currentLanguage === 'ms' ? "Sila isi e-mel dan kata laluan anda!" : "Please enter your email and password!");
+                return;
+            }
+
+            // Dapatkan senarai pengguna berdaftar sah
+            let currentUsers = JSON.parse(localStorage.getItem('mathgo_users')) || {};
+
+            // Semakan kewujudan akaun & padanan kata laluan
+            if (currentUsers[emailInput] && currentUsers[emailInput].pass === passInput) {
+                // Berjaya Log Masuk
+                const userProfile = currentUsers[emailInput];
+                document.getElementById('display-student-name').innerText = userProfile.name;
+                document.getElementById('profile-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfile.name}`;
+                
+                showScreen('screen-dashboard');
+                document.getElementById('role-select').value = 'student';
+            } else {
+                // Gagal Log Masuk (Akaun tidak wujud atau kata laluan salah)
+                alert(currentLanguage === 'ms' ? "Ralat Log Masuk! Pastikan anda telah mendaftar, e-mel sah, dan kata laluan anda betul." : "Login Error! Make sure you have registered, email is valid, and password is correct.");
+            }
         }
 
         function logout() {
             showScreen('screen-onboarding');
+            // Bersihkan input login untuk keselamatan
+            document.getElementById('login-email').value = "";
+            document.getElementById('login-pass').value = "";
         }
 
         // DYNAMIC TOPIC RENDERING SYSTEM
@@ -548,7 +600,6 @@
             currentQuestionIndex = 0;
             document.getElementById('score-val').innerText = "0";
 
-            // Structural question payload generation based on context
             if (topicName.includes("Tambah") || topicName.includes("Kira")) {
                 exerciseQuestions = [
                     { question: "Kira jumlah objek ini: 🍎 🍎 + 🍎", options: ["2", "3", "4", "5"], answer: "3", hint: "Kira buah epal bermula dengan nombor 1, sifar tidak dikira." },
@@ -568,7 +619,6 @@
         // QUESTION DESIGN LAYOUT RENDERER
         function renderCurrentQuestion() {
             if (currentQuestionIndex >= exerciseQuestions.length) {
-                // Quiz completed trigger
                 triggerConfettiBurst();
                 alert(`Tahniah! Anda telah melengkapkan kuiz ini dengan cemerlang. Skor: ${runningScore * 10} Mata diperoleh!`);
                 showScreen('screen-dashboard');
@@ -579,7 +629,6 @@
             const activeData = exerciseQuestions[currentQuestionIndex];
             document.getElementById('question-text').innerText = activeData.question;
             
-            // Set tracking dynamic layout progress status
             const currentPercentage = (currentQuestionIndex / exerciseQuestions.length) * 100;
             document.getElementById('activity-progress').style.width = `${currentPercentage}%`;
 
